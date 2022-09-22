@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Menú de Accesorios</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+			<p:menuitem value="Nuevo Accesorio" icon="pi pi-users"
+				action="#{beanTipoAccesorio.actionMenuNuevoTipoAccesorios()}" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form id="lista1">
+			<p:dataTable value="#{beanAccesorio.listaAccesoriosActivos}"
+				var="accesorio" paginator="true" rows="5">
+				<p:column headerText="NOMBRE" filterBy="#{accesorio.acceNombre}"
+					filterMatchMode="contains">
+					<h:outputText value="#{accesorio.acceNombre}" />
+				</p:column>
+				<p:column headerText="NRO. SERIE"
+					filterBy="#{accesorio.acceNroSerie}" filterMatchMode="contains">
+					<h:outputText value="#{accesorio.acceNroSerie}" />
+				</p:column>
+				<p:column headerText="RESPONSABLE"
+					filterBy="#{accesorio.responsable.respNombres}"
+					filterMatchMode="contains">
+					<h:outputText value="#{accesorio.responsable.respNombres}" />
+				</p:column>
+				<p:column headerText="PRECIO" filterBy="#{accesorio.accPrecio}"
+					filterMatchMode="contains">
+					<h:outputText value="#{accesorio.accPrecio}" />
+				</p:column>
+				<p:column headerText="PROVEEDOR"
+					filterBy="#{accesorio.proveedor.proEmpresa}"
+					filterMatchMode="contains">
+					<h:outputText value="#{accesorio.proveedor.proEmpresa}" />
+				</p:column>
+				<p:column headerText="DEPENDENCIA"
+					filterBy="#{accesorio.segDependencia.depDescripcion}"
+					filterMatchMode="contains">
+					<h:outputText value="#{accesorio.segDependencia.depDescripcion}" />
+				</p:column>
+				<p:column headerText="ESTADO" filterBy="#{accesorio.acceEstado}"
+					filterMatchMode="contains">
+					<h:outputText value="#{accesorio.acceEstado}" />
+				</p:column>
+
+				<p:column headerText="OPCIONES">
+
+					<p:commandButton icon="pi pi-eye" title="ver"
+						styleClass="ui-button-warning"
+						action="#{beanAccesorio.actionSeleccionarAccesorio(accesorio)}"
+						update="@form" />
+					<p:commandButton icon="pi pi-pencil" title="editar"
+						action="#{beanAccesorio.actionSeleccionarEdicionAccesorio(accesorio)}"
+						update="@form" />
+					<p:commandButton icon="pi pi-reply" title=" enviar a Bodega"
+						styleClass="ui-button-success"
+						action="#{beanBodega.actionNuevoBodegaAccesorio()}"
+						actionListener="#{beanAccesorio.actionSeleccionarAccesorioBodega(accesorio)}"
+						oncomplete="PF('dialogoAccesorioBodega').show()" update="@form,:lista4">
+					</p:commandButton>
+
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+	<!-- ************Ventana emergente para enviar a Bodega********** -->
+
+	<p:dialog widgetVar="dialogoAccesorioBodega" align="center"
+		header="Accesorio de Bodega">
+		<h:form id="lista4">
+			<div align="center">
+				<p>
+					<p:panelGrid columns="4">
+						<h:outputText value="NOMBRE:" />
+						<h:outputText value="#{beanAccesorio.accesorioBodega.acceNombre}" />
+
+						<h:outputText value="NRO SERIE:" />
+						<h:outputText
+							value="#{beanAccesorio.accesorioBodega.acceNroSerie}" />
+					</p:panelGrid>
+				</p>
+				<p>
+					<b><h:outputText value="OBSERVACIÓN" /></b>
+				</p>
+				<p:inputTextarea rows="6" style="width: 600px;"
+					value="#{beanBodega.nuevoBodegaAccesorio.bodObservacion}"/>
+				<p>
+					<p:panelGrid columns="3">
+						<p:commandButton value="Enviar a Bodega"
+							icon="pi pi-sort-amount-down" styleClass="ui-button-danger"
+							action="#{beanAccesorio.actionListenerInsertarNuevoAccesorioABodega(beanAccesorio.accesorioBodega,beanAccesorio.equipoDevuelto.equipo)}"
+							update="@form,:lista1">
+							<p:confirm header="Confirmación"
+								message="Desea enviar a Bodega este Accesorio?"
+								icon="pi pi-info-circle" />
+						</p:commandButton>
+					</p:panelGrid>
+				</p>
+			</div>
+		</h:form>
+	</p:dialog>
+	<p:confirmDialog global="true" hideEffect="fade" responsive="true"
+		width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+
+</body>
+</html>

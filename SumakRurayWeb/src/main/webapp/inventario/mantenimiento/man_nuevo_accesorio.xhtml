@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Nuevo Mantenimiento de Accesorio</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+			<p:menuitem value="Regresar" icon="pi pi-arrow-circle-left"
+				action="menu_man_accesorio" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<br />
+	<h:form id="lista3">
+
+		<div align="center">
+
+
+			<p:splitter style="height: 500px; width:1600px" styleClass="mb-5">
+				<!-- ________________________splitter 1 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="50" minSize="50">
+					<br />
+					<div style="margin-left: 50px" align="left">
+						<p:panelGrid columns="4">
+							<h:outputText value="ACCESORIO" />
+							<p:selectOneMenu filterMatchMode="contains" filter="true"
+								value="#{beanMantenimiento.acceIdSeleccionado}">
+								<f:selectItem itemLabel="Seleccione una Accesorio..."
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{beanMantenimiento.listaAccesoriosInactivos}" var="u"
+									itemLabel=" #{u.acceNroSerie} #{u.acceNombre}"
+									itemValue="#{u.acceId}"></f:selectItems>
+
+							</p:selectOneMenu>
+							<p:commandButton title="Carrito" icon="pi pi-search"
+								actionListener="#{beanMantenimiento.ActionfindAccesorio()}"
+								update="@form" styleClass="rounded-button ui-button-help" />
+
+							<p:commandButton value="SAVE" icon="pi pi-save" update="@form"
+								styleClass="rounded-button ui-button-help"
+								actionListener="#{beanMantenimiento.actionListenerInsertarNuevoAccesorioMantenimiento()}">
+							</p:commandButton>
+						</p:panelGrid>
+
+						<br />
+						<p:panelGrid columns="4">
+
+							<h:outputText value="NOMBRE" />
+							<h:outputText
+								value="#{beanMantenimiento.accesorioDevuelto.acceNombre}" />
+
+							<h:outputText value="RESPOSABLE" />
+							<h:outputText
+								value="#{beanMantenimiento.accesorioDevuelto.responsable.respNombres}" />
+
+							<h:outputText value="DEPENDENCIA" />
+							<h:outputText
+								value="#{beanMantenimiento.accesorioDevuelto.segDependencia.depDescripcion}" />
+							<h:outputText value="SERIE" />
+							<h:outputText
+								value="#{beanMantenimiento.accesorioDevuelto.acceNroSerie}" />
+
+							<h:outputText value="GARANTIA" />
+							<h:outputText
+								value="#{beanMantenimiento.accesorioDevuelto.acceNroSerie}" />
+							<h:outputText value="FUNCIONARIO ENTREGA" />
+							<p:inputText
+								value="#{beanMantenimiento.nuevoMantenimiento.manFuncionarioRecibe}" />
+							<h:outputText value=" FUNCIONARIO/EMPRESA QUE RECIBE" />
+							<p:inputText
+								value="#{beanMantenimiento.nuevoMantenimiento.manFuncionarioRecibe}" />
+
+						</p:panelGrid>
+
+					</div>
+				</p:splitterPanel>
+
+
+				<!-- ________________________splitter 2 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="15">
+					<p>
+						<b><h:outputText value="CARACTERISTICAS" /></b>
+					</p>
+					<p:dataTable value="#{beanMantenimiento.listaAccesorioAtributo}"
+						var="accesorioAtributo" style="width:300px">
+						<p:column headerText="NOMBRE" style="width:50px">
+							<h:outputText value="#{accesorioAtributo.atributo.atriNombre}" />
+						</p:column>
+						<p:column headerText="VALOR" style="width:50px">
+							<h:outputText value="#{accesorioAtributo.atriDescripcion}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:splitterPanel>
+			</p:splitter>
+
+
+			<p:splitter style="height: 250px; width:1600px" styleClass="mb-5">
+				<!-- ________________________splitter 1 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="50" minSize="50">
+
+					<br />
+					<p:panelGrid columns="2">
+						<h:outputText value="EXTERNO / INTERNO" />
+						<p:selectOneMenu id="option"
+							value="#{beanMantenimiento.nuevoMantenimiento.manTipoIntExt}">
+							<f:selectItem itemLabel="Selesccione" itemValue="" />
+							<f:selectItem itemLabel="Interno" itemValue="interno" />
+							<f:selectItem itemLabel="Externo" itemValue="externo" />
+						</p:selectOneMenu>
+						<h:outputText value="PREVENTIVO / CORRECTIVO" />
+						<p:selectOneMenu id="option2"
+							value="#{beanMantenimiento.nuevoMantenimiento.manTipoPreCorr}">
+							<f:selectItem itemLabel="Selesccione" itemValue="" />
+							<f:selectItem itemLabel="Preventivo" itemValue="preventivo" />
+							<f:selectItem itemLabel="Correctivo" itemValue="correctivo" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+				</p:splitterPanel>
+				<!-- ________________________splitter 2 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					minSize="50">
+					<br />
+					<b><h:outputText value="DESCRIPCION/PROBLEMA/DAÑO" /></b>
+					<p>
+						<p:inputTextarea rows="6" style="width: 600px;"
+							value="#{beanMantenimiento.nuevoMantenimiento.manDescripcion}" />
+					</p>
+				</p:splitterPanel>
+			</p:splitter>
+		</div>
+	</h:form>
+	<!-- ________________________VENTANA EMERGENTE CREAR DEPENDENCIA _______________________________________ -->
+
+	<p:dialog header="Crear Dependencia"
+		widgetVar="dialogoCrearDependencia">
+		<h:form id="formCrearDependencia">
+
+		</h:form>
+	</p:dialog>
+
+
+</body>
+</html>

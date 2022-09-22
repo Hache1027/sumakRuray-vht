@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Dependencia</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+
+			<p:menuitem value="Proveedor" icon="pi pi-user-plus"
+				action="proveedors" />
+
+			<p:menuitem value="Responsable" icon="pi pi-user-plus"
+				action="responsable" />
+
+			<p:menuitem value="Dependencia" icon="pi pi-inbox"
+				action="dependencia" />
+			<p:menuitem value="Dependencia" icon="pi pi-plus"
+				title="Nuevo Dependencia"
+				action="#{beanDependencia.actionNuevoSegDependencia()}"
+				oncomplete="PF('dialogoCrearDependencia').show()" />
+
+			<p:menuitem value="Lista IPS" icon="pi pi-users"
+				action="#{beanListaIp.actionMenuListaIps()}" />
+
+
+
+
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+
+		<h:form id="listaDependencia">
+			<p:dataTable value="#{beanDependencia.listaSegDependencias}"
+				var="dependencia" paginator="true" rows="5">
+				<p:column headerText="ID" style="width:50px">
+					<h:outputText value="#{dependencia.idSegDependencia}" />
+				</p:column>
+				<p:column headerText="DESCRIPCIÓN"
+					filterBy="#{dependencia.depDescripcion}" filterMatchMode="contains">
+					<h:outputText value="#{dependencia.depDescripcion}" />
+				</p:column>
+				<p:column headerText="ESTADO" style="width:50px">
+					<h:outputText value="#{dependencia.estado}" />
+				</p:column>
+
+				<p:column headerText="OPCIONES">
+
+					<p:commandButton icon="pi pi-pencil" title="editar Dependencia"
+						actionListener="#{beanDependencia.actionSeleccionarEdicionSegDependencia(dependencia)}"
+						oncomplete="PF('dialogoEdicion').show()" update=":formEdicion" />
+
+					<p:commandButton icon="pi pi-times-circle"
+						title="activar/desactiva" styleClass="ui-button-danger"
+						update="@form,:listaDependencia"
+						actionListener="#{beanDependencia.actionListenerActivarDesactivarSegDependencia(Dependencia.idSegDependencia)}">
+						<p:confirm header="Confirmación"
+							message="¿Desea borrar este usuario?" icon="pi pi-info-circle" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+	<p:dialog header="Edición" widgetVar="dialogoEdicion">
+		<h:form id="formEdicion">
+			<p:panelGrid columns="2" layout="grid">
+				<h:outputText value="Descripción:" />
+				<p:inputText
+					value="#{beanDependencia.edicionSegDependencia.depDescripcion}"
+					required="true" requiredMessage="Ingrese el teléfono" />
+				<p:commandButton value="Actualizar" icon="pi pi-save"
+					update="listaDependencia"
+					actionListener="#{beanProveedor.actionListenerActualizarEdicionProveedor()}"></p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+	<p:dialog header="Crear Dependencia"
+		widgetVar="dialogoCrearDependencia">
+		<h:form id="formCrearDependencia">
+			<p:panelGrid columns="2">
+				<h:outputText value="Descripción:" />
+				<p:inputText
+					value="#{beanDependencia.nuevoSegDependencia.depDescripcion}"
+					required="true" requiredMessage="Ingrese una Dependencia" />
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanDependencia.actionListenerInsertarNuevoSegDependencia()}"
+					update="listaDependencia"></p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+		responsive="true" width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+
+</body>
+</html>

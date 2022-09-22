@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Bodega Equipo</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+			<p:menuitem value="Equipos Inactivos" icon="pi pi-user-plus"
+				action="#{beanBodega.actionSelectionEquiposInactivos()}" />
+
+			<p:menuitem value="Accesorio Inactivos" icon="pi pi-user-plus"
+				action="#{beanBodega.actionSelectionAccesoriosInactivos()}" />
+
+
+			<p:menuitem value="Accesorios Inactivos en Equipos"
+				icon="pi pi-user-plus"
+				action="#{beanBodega.actionSelectionAccesoriosInactivosCE()}" />
+
+			<f:facet name="options">
+
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form id="lista1">
+			<p:dataTable value="#{beanBodega.listaEquipoBodegas}"
+				var="equipoBodega" paginator="true" rows="5">
+
+				<p:column headerText="EQUIPO" filterBy="#{equipoBodega.equiNombre}"
+					filterMatchMode="contains">
+					<h:outputText value="#{equipoBodega.equiNombre}" />
+				</p:column>
+				<p:column headerText="NRO. SERIE"
+					filterBy="#{equipoBodega.equiNroSerie}" filterMatchMode="contains">
+					<h:outputText value="#{equipoBodega.equiNroSerie}" />
+				</p:column>
+				<p:column headerText="ULTIMO RESPONSABLE "
+					filterBy="#{equipoBodega.responsable.respNombres} #{equipoBodega.responsable.respApellidos}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{equipoBodega.responsable.respNombres} #{equipoBodega.responsable.respApellidos}" />
+				</p:column>
+				<p:column headerText="ULTIMA DEPENDENCIA"
+					filterBy="#{equipoBodega.segDependencia.depDescripcion}"
+					filterMatchMode="contains">
+					<h:outputText value="#{equipoBodega.segDependencia.depDescripcion}" />
+				</p:column>
+
+				<p:column headerText="ESTADO">
+					<h:outputText value="#{equipoBodega.equiEstado}" />
+				</p:column>
+
+
+				<p:column headerText="OPCIONES">
+					<p:commandButton icon="pi pi-eye" title="vista"
+						action="#{beanEquipo.actionVistaEquipo(equipoBodega)}"
+						styleClass="ui-button-warning" update="@form" />
+					<p:commandButton icon="pi pi-pencil" title="editar"
+						action="#{beanEquipo.actionEdicionEquipo(equipoBodega)}"
+						update="@form" />
+					<p:commandButton icon="pi pi-sort-amount-up" title="Activar Equipo"
+						actionListener="#{beanEquipo.actionActivarEquipoWithAllAccesorio(equipoBodega)}"
+						styleClass="button ui-button-help " update="@form">
+						<p:confirm header="Confirmación"
+							message="Desea Activar este Equipo?" icon="pi pi-info-circle" />
+					</p:commandButton>
+					<p:commandButton icon="pi pi-sort-amount-down" title="Dar de Baja"
+						styleClass="ui-button-danger"
+						actionListener="#{beanBaja.actionSeleccisonEquipoBaja(equipoBodega)}"
+						update="@form,:lista4">
+						<p:confirm header="Confirmación"
+							message="Desea dar de baja este Equipo?" icon="pi pi-info-circle" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+	<!-- ************Ventana emergente para dar de baja un Equipo********** -->
+
+	<p:dialog widgetVar="dialogoEquipoBaja" align="center"
+		header="Equipo de Baja">
+		<h:form id="lista4">
+			<div align="center">
+				<p>
+					<p:panelGrid columns="4">
+						<h:outputText value="NOMBRE:" />
+						<h:outputText value="#{beanBaja.seleccionBajaEquipo.equiNombre}" />
+
+						<h:outputText value="NRO SERIE:" />
+						<h:outputText value="#{beanBaja.seleccionBajaEquipo.equiNroSerie}" />
+					</p:panelGrid>
+				</p>
+				<p>
+					<b><h:outputText value="OBSERVACIÓN" /></b>
+				</p>
+				<p:inputTextarea rows="6" style="width: 600px;"
+					value="#{beanBaja.nuevoBajaEquipo.bajaDescripcion}" />
+				<p>
+					<p:panelGrid columns="3">
+						<h:outputText value="ESTADO:" />
+						<p:selectOneMenu id="option"
+							value="#{beanBaja.nuevoBajaEquipo.bajaTipoObsolDania}">
+							<f:selectItem itemLabel="Selesccione" itemValue="" />
+							<f:selectItem itemLabel="Obsoleto" itemValue="OBSOLETO" />
+							<f:selectItem itemLabel="Dañado" itemValue="DAÑADO" />
+						</p:selectOneMenu>
+						<p:commandButton value="Dar de Baja" icon="pi pi-sort-amount-down"
+							styleClass="ui-button-danger"
+							actionListener="#{beanBaja.actionListenerInsertarNuevoEquipoABaja()}"
+							update="@form,:lista1">
+							<p:confirm header="Confirmación"
+								message="Desea dar de baja este Equipo?"
+								icon="pi pi-info-circle" />
+						</p:commandButton>
+					</p:panelGrid>
+				</p>
+			</div>
+		</h:form>
+	</p:dialog>
+
+
+
+
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+		responsive="true" width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+</body>
+</html>

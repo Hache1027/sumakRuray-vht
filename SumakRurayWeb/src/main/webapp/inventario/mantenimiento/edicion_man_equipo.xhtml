@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Edición Mantenimiento Equipo</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+
+			<p:menuitem value="Regresar" icon="pi pi-arrow-circle-left"
+				action="menu_man_equipo" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<br />
+	<h:form id="lista3">
+
+		<div align="center">
+			<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+				<!-- ________________________splitter 1 _______________________________________ -->
+				<p:splitterPanel>
+					<p>
+
+						<b> <h:outputText value="EDICIÓN DE MANTENIMIENTO" />
+						</b>
+
+					</p>
+				</p:splitterPanel>
+			</p:splitter>
+
+			<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+				<!-- ________________________splitter 1 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="50" minSize="50">
+					<p>
+						<b><h:outputText value="INFORMACIÓN DEL EQUIPO" /></b>
+					</p>
+
+
+					<p:panelGrid columns="4">
+						<h:outputText value="EQUIPO" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.equipo.equiNombre}" />
+
+						<h:outputText value="NOMBRE" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.equipo.equiNombre}" />
+
+						<h:outputText value="RESPOSABLE" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.equipo.responsable.respNombres}" />
+
+						<h:outputText value="DEPENDENCIA" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.equipo.segDependencia.depDescripcion}" />
+						<h:outputText value="SERIE" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.equipo.equiNroSerie}" />
+
+						<h:outputText value="GARANTIA" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.equipo.equiNroSerie}" />
+						<h:outputText value="FUNCIONARIO ENTREGA" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manFuncionarioEntrega}" />
+
+						<h:outputText value=" FUNCIONARIO QUE RECIBE o EMPRESA" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manFuncionarioRecibe}" />
+
+						<h:outputText value="USUARIO QUE RECIBE (RETORNO)" />
+						<p:inputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manUsuarioRecibe}" />
+					</p:panelGrid>
+
+					<br />
+					<p:panelGrid columns="2">
+						<h:outputText value="EXTERNO / INTERNO" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manTipoIntExt}" />
+						<h:outputText value="PREVENTIVO / CORRECTIVO" />
+						<h:outputText
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manTipoPreCorr}" />
+					</p:panelGrid>
+					<br />
+					<br />
+
+
+				</p:splitterPanel>
+
+				<!-- ________________________splitter 2 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="15">
+
+					<p>
+						<b><h:outputText value="NUEVA CARACTERISTICAS" /></b>
+					</p>
+					<p:menubar>
+						<p:menuitem value="Atributos" icon="pi pi-plus"
+							styleClass="ui-button-warning" title="Nuevo Dependencia"
+							action="#{beanSegRoles.actionMenuRoles()}"
+							oncomplete="PF('dialogoCrearAtributo').show()" />
+					</p:menubar>
+					<p:panelGrid columns="2">
+						<h:outputText value="Atributo" />
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanEquipo.atriIdSeleccionado}" id="listaAtributo"
+							style="width:250px">
+							<f:selectItem itemLabel="Seleccione un atributo..."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanAtributo.listaAtributos}" var="u"
+								itemLabel=" #{u.atriNombre}" itemValue="#{u.atriId}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="Valor o descripción" />
+						<p:inputText value="#{beanEquipo.valorAtributo}" />
+
+
+						<p:commandButton title="Carrito" icon="pi pi-plus"
+							actionListener="#{beanEquipo.actionListenerAdicionarAccesorioAtributo('Atributo')}"
+							update="@form" styleClass="rounded-button ui-button-help" />
+					</p:panelGrid>
+
+
+				</p:splitterPanel>
+				<!-- ________________________splitter 3_______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="15">
+
+					<p>
+						<b><h:outputText value="CARACTERISTICAS" /></b>
+					</p>
+					<p:dataTable
+						value="#{beanMantenimiento.equipoDevuelto.equipoAtributos}"
+						var="EquipoAtributos" scrollable="true" scrollHeight="200"
+						id="listaAtributos">
+						<p:column headerText="NOMBRE" style="width:50px">
+							<h:outputText value="#{EquipoAtributos.atributo.atriNombre}" />
+						</p:column>
+						<p:column headerText="VALOR" style="width:50px">
+							<h:outputText value="#{EquipoAtributos.atriDescripcion}" />
+						</p:column>
+						<p:column headerText="ACCIÓN" style="width:50px">
+							<p:commandButton icon="pi pi-window-maximize"
+								styleClass="rounded-button ui-button-help"
+								actionListener="#{beanAtributo.actionSeleccionarEdicionEquipoAtributo(EquipoAtributos)}"
+								oncomplete="PF('dialogoModificarAtributo').show()"
+								update=":formModificarAtributo"></p:commandButton>
+						</p:column>
+
+					</p:dataTable>
+
+				</p:splitterPanel>
+			</p:splitter>
+
+			<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+				<!-- ________________________splitter 3 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					minSize="25">
+					<br />
+					<b><h:outputText value="DESCRIPCION/PROBLEMA/DAÑO" /></b>
+					<p>
+						<h:outputText rows="6" style="width: 600px;"
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manDescripcion}" />
+					</p>
+				</p:splitterPanel>
+				<!-- ________________________splitter 1 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					minSize="50">
+					<br />
+					<p:panelGrid columns="3">
+						<h:outputText value="OBSERVACIÓN" />
+
+						<p:inputTextarea rows="6" style="width: 600px;"
+							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manDiagnostico}" />
+
+						<p:commandButton value="Actualizar" icon="pi pi-save"
+							update="@form"
+							actionListener="#{beanMantenimiento.actionListenerActualizarMantenimiento()}"
+							action="#{beanEquipo.actionListenerActualizarEdicionEquiposfromMantenimiento(beanMantenimiento.equipoDevuelto)}">
+						</p:commandButton>
+					</p:panelGrid>
+				</p:splitterPanel>
+				<br />
+				<br />
+
+			</p:splitter>
+		</div>
+	</h:form>
+	<!-- ________________________VENTANA EMERGENTE PARA MODIFICAR UNA CARACTERISTICA O ARIBUTO  _______________________________________ -->
+
+	<p:dialog header="Modificar Caracteristica"
+		widgetVar="dialogoModificarAtributo">
+		<h:form id="formModificarAtributo">
+			<div align="center">
+				<p>
+					<b><h:outputText value="CARACTERISTICA" /></b>
+				</p>
+				<p:panelGrid columns="3">
+					<h:outputText
+						value="#{beanAtributo.edicionEquipoAtributo.atributo.atriNombre}" />
+					<p:inputText
+						value="#{beanAtributo.edicionEquipoAtributo.atriDescripcion}"
+						required="true"
+						requiredMessage="Ingrese un valor de la Caracteristica" />
+					<p:commandButton icon="pi pi-save" title="Modificar Valor"
+						actionListener="#{beanAtributo.actionListenerActualizarEdicionEquipoAtributo()}"
+						styleClass="rounded-button ui-button-help "
+						update="@form,lista3:listaAtributos">
+						<p:confirm header="Confirmación"
+							message="¿Está seguro de Modificar esta Caracteristica?"
+							icon="pi pi-info-circle" />
+					</p:commandButton>
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</p:dialog>
+	<!-- ________________________VENTANA EMERGENTE CREAR ATRIBUTO _______________________________________ -->
+
+	<p:dialog header="Crear Atributo" widgetVar="dialogoCrearAtributo">
+		<h:form id="formCrearAtributo">
+			<p:panelGrid columns="2">
+				<h:outputText value="Descripción:" />
+				<p:inputText value="#{beanAtributo.nuevoAtributo.atriNombre}"
+					required="true" requiredMessage="Ingrese el nombre del atributo" />
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanAtributo.actionListenerInsertarNuevoAtributo()}"
+					update="@form,:lista3:listaAtributos"></p:commandButton>
+
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:confirmDialog global="true" hideEffect="fade" responsive="true"
+		width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Usuarios</title>
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Regresar" icon="pi pi-home" action="usuarios" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form>
+			<p:panelGrid columns="2">
+				<h:outputText value="Cédula:" />
+				<p:inputText value="#{beanSegUsuarios.nuevoPersona.perCedula}"
+					required="true" requiredMessage="Ingrese la cedula" />
+				<h:outputText value="Apellidos:" />
+				<p:inputText value="#{beanSegUsuarios.nuevoPersona.perApellidos}"
+					required="true" requiredMessage="Ingrese los apellidos" />
+				<h:outputText value="Nombres:" />
+				<p:inputText value="#{beanSegUsuarios.nuevoPersona.perNombres}"
+					required="true" requiredMessage="Ingrese los nombres" />
+				<h:outputText value="Telefono:" />
+				<p:inputText value="#{beanSegUsuarios.nuevoPersona.perTelefono}"
+					required="true" requiredMessage="Ingrese el telefono" />
+				<h:outputText value="Dirección:" />
+				<p:inputText value="#{beanSegUsuarios.nuevoPersona.perDireccion}"
+					required="true" requiredMessage="Ingrese el correo" />
+				<h:outputText value="Correo:" />
+				<p:inputText value="#{beanSegUsuarios.nuevoPersona.perCorreo}"
+					required="true" requiredMessage="Ingrese el correo" />
+				<h:outputText value="Clave:" />
+				<p:password value="#{beanSegUsuarios.nuevoUsuario.clave}"
+					required="true" requiredMessage="Ingrese una clave" />
+					
+				<h:outputText value="ROL" />
+				<p:selectOneMenu filterMatchMode="contains" filter="true"
+						value="#{beanSegUsuarios.idSegRolSeleccionado}">
+						<f:selectItem itemLabel="Seleccione un Rol..."
+							noSelectionOption="true" />
+						<f:selectItems value="#{beanSegUsuarios.listaRoles}"
+							var="u" itemLabel=" #{u.rolDescripcion}"
+							itemValue="#{u.idSegRol}"></f:selectItems>
+					</p:selectOneMenu>
+					
+				<h:outputText value="DEPENDENCIA" />
+				<p:selectOneMenu filterMatchMode="contains" filter="true"
+						value="#{beanSegUsuarios.idSegDependenciaSeleccionado}">
+						<f:selectItem itemLabel="Seleccione una Dependencia..."
+							noSelectionOption="true" />
+						<f:selectItems value="#{beanSegUsuarios.listaDependencias}"
+							var="u" itemLabel=" #{u.depDescripcion}"
+							itemValue="#{u.idSegDependencia}"></f:selectItems>
+					</p:selectOneMenu>
+				
+				<p:commandButton value="Guardar" icon="pi pi-save" update="@form"
+					actionListener="#{beanSegUsuarios.actionListenerInsertarNuevoUsuario()}"></p:commandButton>
+			
+			</p:panelGrid>
+		</h:form>
+	</p:panel>
+</body>
+</html>

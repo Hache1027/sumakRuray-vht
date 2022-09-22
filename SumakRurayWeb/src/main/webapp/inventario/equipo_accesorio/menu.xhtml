@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Menu Equipo</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+			<p:menuitem value="Nuevo Equipo" icon="pi pi-users"
+				action="tipo_equipo" />
+			<p:menuitem value="Equipo para Baja" icon="pi pi-sort-amount-down"
+				action="#{beanSegDependencia.actionMenuDependencias()}" />
+
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form id="lista1">
+			<p:dataTable value="#{beanEquipo.listaEquiposActivos}" var="Equipo"
+				paginator="true" rows="5">
+				<p:column headerText="NOMBRE" filterBy="#{Equipo.equiNombre}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Equipo.equiNombre}" />
+				</p:column>
+				<p:column headerText="NRO. SERIE" filterBy="#{Equipo.equiNroSerie}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Equipo.equiNroSerie}" />
+				</p:column>
+				<p:column headerText="RESPONSABLE"
+					filterBy="#{Equipo.responsable.respNombres}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Equipo.responsable.respNombres}" />
+				</p:column>
+				<p:column headerText="PRECIO" filterBy="#{Equipo.equiValor}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Equipo.equiValor}" />
+				</p:column>
+				<p:column headerText="PROVEEDOR"
+					filterBy="#{Equipo.proveedor.proEmpresa}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Equipo.proveedor.proEmpresa}" />
+				</p:column>
+				<p:column headerText="ESTADO" filterBy="#{Equipo.equiEstado}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Equipo.equiEstado}" />
+				</p:column>
+				<p:column headerText="OPCIONES">
+
+					<p:commandButton icon="pi pi-eye" title="vista"
+						action="#{beanEquipo.actionVistaEquipo(Equipo)}"
+						styleClass="ui-button-warning" update="@form" />
+					<p:commandButton icon="pi pi-pencil" title="editar"
+						action="#{beanEquipo.actionEdicionEquipo(Equipo)}" update="@form" />
+					<p:commandButton icon="pi pi-reply" title=" enviar a Bodega"
+						styleClass="ui-button-success"
+						action="#{beanBodega.actionNuevoBodegaEquipo()}"
+						actionListener="#{beanEquipo.actionSeleccionarEquipoBodega(Equipo)}"
+						oncomplete="PF('dialogoEquipoBodega').show()"
+						update="@form,:lista4">
+					</p:commandButton>
+
+
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+	<!-- ************Ventana emergente para enviar a Bodega********** -->
+
+	<p:dialog widgetVar="dialogoEquipoBodega" align="center"
+		header="Equipo de Bodega">
+		<h:form id="lista4">
+			<div align="center">
+				<p>
+					<p:panelGrid columns="4">
+						<h:outputText value="NOMBRE:" />
+						<h:outputText value="#{beanEquipo.equipoBodega.equiNombre}" />
+
+						<h:outputText value="NRO SERIE:" />
+						<h:outputText value="#{beanEquipo.equipoBodega.equiNroSerie}" />
+					</p:panelGrid>
+				</p>
+				<p>
+					<b><h:outputText value="OBSERVACIÓN" /></b>
+				</p>
+				<p:inputTextarea rows="6" style="width: 600px;"
+					value="#{beanBodega.nuevoBodegaEquipo.bodObservacion}" />
+				<p>
+					<p:panelGrid columns="3">
+						<p:commandButton value="Enviar a Bodega"
+							icon="pi pi-sort-amount-down" styleClass="ui-button-danger"
+							action="#{beanEquipo.actionListenerInsertarNuevoEquipoABodega(beanEquipo.equipoBodega)}"
+							update="@form,:lista1">
+							<p:confirm header="Confirmación"
+								message="¿Desea enviar este equipo a Bodega?"
+								icon="pi pi-info-circle" />
+						</p:commandButton>
+					</p:panelGrid>
+				</p>
+			</div>
+		</h:form>
+	</p:dialog>
+
+	<p:confirmDialog global="true" hideEffect="fade" responsive="true"
+		width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+
+</body>
+</html>

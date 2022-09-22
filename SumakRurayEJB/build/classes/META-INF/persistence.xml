@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+		<persistence-unit name="sumakruray2" transaction-type="JTA">
+		<jta-data-source>java:/sumakruray2</jta-data-source>
+		<class>sumakruray.model.core.entities.Accesorio</class>
+		<class>sumakruray.model.core.entities.AccesorioAtributo</class>
+		<class>sumakruray.model.core.entities.AccesorioBaja</class>
+		<class>sumakruray.model.core.entities.AccesorioMantenimiento</class>
+		<class>sumakruray.model.core.entities.Atributo</class>
+		<class>sumakruray.model.core.entities.AudBitacora</class>
+		<class>sumakruray.model.core.entities.BitacoraAccesorio</class>
+		<class>sumakruray.model.core.entities.BitacoraEquipo</class>
+		<class>sumakruray.model.core.entities.BodegaAccesorio</class>
+		<class>sumakruray.model.core.entities.BodegaEquipo</class>
+		<class>sumakruray.model.core.entities.Equipo</class>
+		<class>sumakruray.model.core.entities.EquipoAccesorio</class>
+		<class>sumakruray.model.core.entities.EquipoAtributo</class>
+		<class>sumakruray.model.core.entities.EquipoBaja</class>
+		<class>sumakruray.model.core.entities.EquipoMantenimiento</class>
+		<class>sumakruray.model.core.entities.ListaIp</class>
+		<class>sumakruray.model.core.entities.Mantenimiento</class>
+		<class>sumakruray.model.core.entities.Marca</class>
+		<class>sumakruray.model.core.entities.Persona</class>
+		<class>sumakruray.model.core.entities.Proveedor</class>
+		<class>sumakruray.model.core.entities.Responsable</class>
+		<class>sumakruray.model.core.entities.SegAsignacion</class>
+		<class>sumakruray.model.core.entities.SegDependencia</class>
+		<class>sumakruray.model.core.entities.SegModulo</class>
+		<class>sumakruray.model.core.entities.SegPerfil</class>
+		<class>sumakruray.model.core.entities.SegRol</class>
+		<class>sumakruray.model.core.entities.SegUsuario</class>
+		<class>sumakruray.model.core.entities.TipoAccesorio</class>
+		<class>sumakruray.model.core.entities.TipoEquipo</class>
+	</persistence-unit>
+</persistence>

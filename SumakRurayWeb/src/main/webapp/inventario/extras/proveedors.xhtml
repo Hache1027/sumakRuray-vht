@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Proveedor</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+			<p:menuitem value="Proveedor" icon="pi pi-user-plus"
+				action="proveedors" />
+			<p:menuitem value="Proveedor" icon="pi pi-plus"
+				title="Nuevo Proveedor"
+				action="#{beanProveedor.actionNuevoProveedor()}"
+				oncomplete="PF('dialogoCrearProveedor').show()" />
+
+			<p:menuitem value="Responsable" icon="pi pi-user-plus"
+				action="responsable" />
+
+			<p:menuitem value="Dependencia" icon="pi pi-inbox"
+				action="dependencia" />
+
+			<p:menuitem value="Lista IPS" icon="pi pi-users"
+				action="#{beanListaIp.actionMenuListaIps()}" />
+
+
+
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form id="listaProveedor">
+			<p:dataTable value="#{beanProveedor.listaProveedors}" var="proveedor"
+				paginator="true" rows="5">
+				<p:column headerText="ID" style="width:50px">
+					<h:outputText value="#{proveedor.proId}" />
+				</p:column>
+				<p:column headerText="EMPRESA" filterBy="#{proveedor.proEmpresa}"
+					filterMatchMode="contains">
+					<h:outputText value="#{proveedor.proEmpresa}" />
+				</p:column>
+				<p:column headerText="TELEFONO" filterBy="#{proveedor.proTelefono}"
+					filterMatchMode="contains">
+					<h:outputText value="#{proveedor.proTelefono}" />
+				</p:column>
+				<p:column headerText="CORREO" filterBy="#{proveedor.proCorreo}"
+					filterMatchMode="contains">
+					<h:outputText value="#{proveedor.proCorreo}" />
+				</p:column>
+				<p:column headerText="DIRECCIÓN"
+					filterBy="#{proveedor.proDireccion}" filterMatchMode="contains">
+					<h:outputText value="#{proveedor.proDireccion}" />
+				</p:column>
+				<p:column headerText="ESTADO" filterBy="#{proveedor.proEstado}"
+					filterMatchMode="contains">
+					<h:outputText value="#{proveedor.proEstado}" />
+				</p:column>
+
+				<p:column headerText="OPCIONES">
+
+					<p:commandButton icon="pi pi-pencil" title="editar Proveedor"
+						actionListener="#{beanProveedor.actionSeleccionarEdicionProveedor(proveedor)}"
+						oncomplete="PF('dialogoEdicion').show()" update=":formEdicion" />
+
+					<p:commandButton icon="pi pi-times-circle"
+						title="activar/desactiva" styleClass="ui-button-danger"
+						update="@form,:listaProveedor"
+						actionListener="#{beanProveedor.actionListenerActivarDesactivarProveedor(proveedor.proId)}">
+						<p:confirm header="Confirmación"
+							message="Desea borrar este usuario?" icon="pi pi-info-circle" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+	<p:dialog header="Edición" widgetVar="dialogoEdicion">
+		<h:form id="formEdicion">
+			<p:panelGrid columns="2" layout="grid">
+				<h:outputText value="Teléfono:" />
+				<p:inputText value="#{beanProveedor.edicionProveedor.proTelefono}"
+					required="true" requiredMessage="Ingrese el teléfono" />
+				<h:outputText value="Correo Electrónico:" />
+				<p:inputText value="#{beanProveedor.edicionProveedor.proCorreo}"
+					required="true" requiredMessage="Ingrese el Correo Electrónico" />
+				<h:outputText value="Dirección:" />
+				<p:inputText value="#{beanProveedor.edicionProveedor.proDireccion}"
+					required="true" requiredMessage="Ingrese la Dirección" />
+				<p:commandButton value="Actualizar" icon="pi pi-save"
+					update="listaProveedor"
+					actionListener="#{beanProveedor.actionListenerActualizarEdicionProveedor()}"></p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Crear Proveedor" widgetVar="dialogoCrearProveedor">
+		<h:form id="formCrearProveedor">
+
+			<p:panelGrid columns="2" layout="grid">
+				<h:outputText value="Empresa:" />
+				<p:inputText value="#{beanProveedor.nuevoProveedor.proEmpresa}"
+					required="true" requiredMessage="Ingrese la Empresa" />
+				<h:outputText value="Teléfono:" />
+				<p:inputText value="#{beanProveedor.nuevoProveedor.proTelefono}"
+					required="true" requiredMessage="Ingrese el Teléfono" />
+				<h:outputText value="Correo electrónico:" />
+				<p:inputText value="#{beanProveedor.nuevoProveedor.proCorreo}"
+					required="true" requiredMessage="Ingrese el correo electrónico" />
+				<h:outputText value="Dirección:" />
+				<p:inputText value="#{beanProveedor.nuevoProveedor.proDireccion}"
+					required="true" requiredMessage="Ingrese la Dirección" />
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanProveedor.actionListenerInsertarNuevoProveedor()}"
+					update="listaProveedor"></p:commandButton>
+			</p:panelGrid>
+
+
+		</h:form>
+	</p:dialog>
+
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+		responsive="true" width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+
+</body>
+</html>

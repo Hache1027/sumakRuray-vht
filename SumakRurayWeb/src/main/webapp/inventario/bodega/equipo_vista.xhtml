@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Vista de Equipo</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+			<p:menuitem value="Regresar" icon="pi pi-arrow-circle-left"
+				action="#{beanEquipo.actionVolverAMenuEquipo()}" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<br />
+
+	<h:form id="lista3">
+
+		<div align="center">
+			<p:splitter style="height: 50px; width:1600px" styleClass="mb-5">
+				<!-- ________________________splitter 1 _______________________________________ -->
+				<p:splitterPanel>
+					<p>
+
+						<b> <h:outputText value="VISTA DE EQUIPO" />
+						</b>
+
+					</p>
+				</p:splitterPanel>
+			</p:splitter>
+
+			<p:splitter style="height: 600px; width:1600px" styleClass="mb-5">
+				<!-- ________________________splitter 1 _______________________________________ -->
+
+
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="50" minSize="50">
+					<p>
+						<b><h:outputText value="INFORMACIÓN DEL EQUIPO" /></b>
+					</p>
+					<div style="margin-left: 50px" align="left">
+
+						<p:panelGrid columns="4">
+							<h:outputText value="EQUIPO" />
+							<h:outputText value="#{beanEquipo.vistaEquipo.equiNombre}" />
+
+							<h:outputText value="NOMBRE" />
+							<h:outputText value="#{beanEquipo.vistaEquipo.equiNombre}" />
+
+							<h:outputText value="RESPOSABLE" />
+							<h:outputText
+								value="#{beanEquipo.vistaEquipo.responsable.respNombres}" />
+
+							<h:outputText value="DEPENDENCIA" />
+							<h:outputText
+								value="#{beanEquipo.vistaEquipo.segDependencia.depDescripcion}" />
+							<h:outputText value="SERIE" />
+							<h:outputText value="#{beanEquipo.vistaEquipo.equiNroSerie}" />
+
+							<h:outputText value="GARANTIA" />
+							<h:outputText value="#{beanEquipo.vistaEquipo.equiGarantia}" />
+							<h:outputText value="PRECIO" />
+							<h:outputText value="#{beanEquipo.vistaEquipo.equiValor}" />
+							<h:outputText value="MARCA" />
+							<h:outputText
+								value="#{beanEquipo.vistaEquipo.marca.marDescripcion}" />
+						</p:panelGrid>
+						<p>
+						<b><h:outputText value="IP ASIGNADO" /></b>
+					</p>
+					<p:panelGrid columns="6" id="informacionIp">
+						<h:outputText value="IP" />
+						<h:outputText value="#{beanEquipo.ipEquipo.ipsIp}" />
+						<h:outputText value="PUERTA DE ENLACE" />
+						<h:outputText value="#{beanEquipo.ipEquipo.ipsPuertaEnlace}" />
+						<h:outputText value="MAC ADRESS" />
+						<h:outputText value="#{beanEquipo.ipEquipo.ipsMacAdress}" />
+						<h:outputText value="OBSERVACIÓN" />
+						<h:outputText value="#{beanEquipo.ipEquipo.ipsObservacion}" />
+					</p:panelGrid>
+					<br />
+					<br />
+
+					</div>
+				</p:splitterPanel>
+				<!-- ________________________splitter 2 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="15">
+					<p>
+						<b><h:outputText value="ACCESORIOS" /></b>
+					</p>
+					<p:dataTable value="#{beanEquipo.listaAccesoriosEquipo}"
+						var="EquipoAccesorios" style="width:350px" scrollable="true"
+						scrollHeight="240">
+						<p:column headerText="NRO. SERIE" style="width:50px">
+							<h:outputText value="#{EquipoAccesorios.accesorio.acceNroSerie}" />
+						</p:column>
+						<p:column headerText="NOMBRE" style="width:50px">
+							<h:outputText value="#{EquipoAccesorios.accesorio.acceNombre}" />
+						</p:column>
+					</p:dataTable>
+
+				</p:splitterPanel>
+				<!-- ________________________splitter 3 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="15">
+
+					<p>
+						<b><h:outputText value="CARACTERISTICAS" /></b>
+					</p>
+					<p:dataTable value="#{beanEquipo.listaAtributosEquipo}"
+						var="EquipoAtributos" style="width:300px" scrollable="true"
+						scrollHeight="240">
+						<p:column headerText="NOMBRE" style="width:50px">
+							<h:outputText value="#{EquipoAtributos.atributo.atriNombre}" />
+						</p:column>
+						<p:column headerText="VALOR" style="width:50px">
+							<h:outputText value="#{EquipoAtributos.atriDescripcion}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:splitterPanel>
+			</p:splitter>
+		</div>
+	</h:form>
+</body>
+</html>

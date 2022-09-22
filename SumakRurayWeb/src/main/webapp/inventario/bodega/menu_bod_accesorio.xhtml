@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Bodega de Accesorios</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+			<p:menuitem value="Equipos Inactivos" icon="pi pi-user-plus"
+				action="#{beanBodega.actionSelectionEquiposInactivos()}" />
+
+			<p:menuitem value="Accesorio Inactivos" icon="pi pi-user-plus"
+				action="#{beanBodega.actionSelectionAccesoriosInactivos()}" />
+
+
+
+
+
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form id="lista2">
+			<p:dataTable value="#{beanBodega.listaAccesorioBodegas}"
+				var="AccesorioBodega" paginator="true" rows="5">
+
+				<p:column headerText="ACCESORIO"
+					filterBy="#{AccesorioBodega.acceNombre}" filterMatchMode="contains">
+					<h:outputText value="#{AccesorioBodega.acceNombre}" />
+				</p:column>
+				<p:column headerText="ULTIMO FUNCIONARIO"
+					filterBy="#{AccesorioBodega.responsable.respNombres} #{AccesorioBodega.responsable.respApellidos}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{AccesorioBodega.responsable.respNombres} #{AccesorioBodega.responsable.respApellidos}" />
+				</p:column>
+				<p:column headerText="ULTIMA DEPENDENCIA"
+					filterBy="#{AccesorioBodega.segDependencia.depDescripcion}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{AccesorioBodega.segDependencia.depDescripcion}" />
+				</p:column>
+				<p:column headerText="ESTADO ACCESORIO"
+					filterBy="#{AccesorioBodega.acceEstado}}"
+					filterMatchMode="contains">
+
+					<h:outputText value="#{AccesorioBodega.acceEstado}" />
+				</p:column>
+
+				<p:column headerText="OPCIONES">
+					<p:commandButton icon="pi pi-eye" title="Vista Accesorio"
+						styleClass="ui-button-warning"
+						action="#{beanAccesorio.actionSeleccionarAccesorio(AccesorioBodega)}" />
+
+					<p:commandButton icon="pi pi-sort-amount-up"
+						title="Colocar en un Equipo"
+						actionListener="#{beanAccesorio.actionVistaSeleccionarAccesorio(AccesorioBodega)}"
+						action="#{beanAccesorio.Mostrardialogos()}"
+						styleClass=" ui-button-help " update="@form,:lista3,:lista2" />
+					<p:commandButton icon="pi pi-sort-amount-down" title="Dar de baja"
+						styleClass="ui-button-danger"
+						actionListener="#{beanBaja.actionSeleccisonAccesorioBaja(AccesorioBodega)}"
+						update="@form,:lista4">
+
+
+
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+
+	<!-- ________________________VENTANA PRINCIPAL CREAR ACCESORIOS _______________________________________ -->
+
+	<p:dialog header="Información del Accesorio"
+		widgetVar="dialogoActivarAccesorio">
+		<h:form id="lista3">
+			<div align="center">
+				<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+					<!-- ________________________splitter 1 _______________________________________ -->
+					<p:splitterPanel>
+						<p>
+
+							<p:panelGrid columns="6">
+								<h:outputText value="NOMBRE:" />
+								<h:outputText value="#{beanAccesorio.vistaAccesorio.acceNombre}" />
+								<h:outputText value="NRO. SERIE:" />
+								<h:outputText
+									value="#{beanAccesorio.vistaAccesorio.acceNroSerie}" />
+								<h:outputText value="COD: BODEGA:" />
+								<h:outputText
+									value="#{beanAccesorio.vistaAccesorio.acceCodBodega}" />
+								<h:outputText value="PRECIO:" />
+								<h:outputText value="#{beanAccesorio.vistaAccesorio.accPrecio}" />
+								<h:outputText value="RESPONSABLE" />
+								<h:outputText
+									value="#{beanAccesorio.vistaAccesorio.responsable.respNombres} #{beanAccesorio.vistaAccesorio.responsable.respApellidos}" />
+								<h:outputText value="PROVEEDOR" />
+								<h:outputText
+									value="#{beanAccesorio.vistaAccesorio.proveedor.proEmpresa} " />
+								<h:outputText value="MARCA" />
+								<h:outputText
+									value="#{beanAccesorio.vistaAccesorio.marca.marDescripcion} " />
+								<h:outputText value="DEPENDENCIA" />
+								<h:outputText
+									value="#{beanAccesorio.vistaAccesorio.segDependencia.depDescripcion} " />
+
+							</p:panelGrid>
+						</p>
+						<p>
+							<b><h:outputText value="EQUIPO QUE PERTENECE" /></b>
+						</p>
+						<p>
+							<p:panelGrid columns="4" id="EquipoQuePertenece">
+								<h:outputText value="NOMBRE" />
+								<h:outputText
+									value="#{beanAccesorio.equipoDevuelto.equipo.equiNombre}   " />
+								<h:outputText value="NRO. SERIE " />
+								<h:outputText
+									value=" #{beanAccesorio.equipoDevuelto.equipo.equiNroSerie} " />
+							</p:panelGrid>
+						</p>
+
+
+
+
+					</p:splitterPanel>
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						size="8">
+						<p>
+							<b><h:outputText value="CARACTERISTICAS" /></b>
+						</p>
+
+						<p:dataTable value="#{beanAccesorio.listaAccesorioAtributo}"
+							var="AccesorioAtributos" style="width:300px" crollable="true"
+							scrollHeight="200">
+							<p:column headerText="ATRIBUTO" style="width:50px">
+								<h:outputText value="#{AccesorioAtributos.atributo.atriNombre}" />
+							</p:column>
+							<p:column headerText="VALOR" style="width:50px">
+								<h:outputText value="#{AccesorioAtributos.atriDescripcion}" />
+							</p:column>
+						</p:dataTable>
+					</p:splitterPanel>
+				</p:splitter>
+
+				<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+					<!-- ________________________splitter 1 _______________________________________ -->
+
+
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						size="50" minSize="50">
+						<p>
+							<p:panelGrid columns="4">
+								<h:outputText value="EQUIPO" />
+								<p:selectOneMenu filterMatchMode="contains" filter="true"
+									value="#{beanEquipo.equiIdSeleccionado}" style="width:300px">
+									<f:selectItem itemLabel="Seleccione una Equipo..."
+										noSelectionOption="true" />
+									<f:selectItems value="#{beanEquipo.listaEquiposActivos}"
+										var="u" itemLabel=" #{u.equiNroSerie} #{u.equiNombre}"
+										itemValue="#{u.equiId}"></f:selectItems>
+
+								</p:selectOneMenu>
+								<p:commandButton title="Buscar Equipo" icon="pi pi-search"
+									actionListener="#{beanEquipo.actionfindEquipo(beanEquipo.equiIdSeleccionado)}"
+									update="@form" styleClass="rounded-button ui-button-help" />
+
+								<p:commandButton value="COLOCAR" icon="pi pi-download"
+									actionListener="#{beanEquipo.ActionAccesorioColocarAEquipo(beanAccesorio.vistaAccesorio)}"
+									update="@form,:lista2,:lista3:EquipoQuePertenece"
+									styleClass=" ui-button-help ">
+								</p:commandButton>
+							</p:panelGrid>
+						</p>
+						<p>
+							<b><h:outputText value="INFORMACIÓN DEL EQUIPO" /></b>
+						</p>
+
+
+						<p>
+							<p:panelGrid columns="4">
+
+								<h:outputText value="NOMBRE" />
+								<h:outputText value="#{beanEquipo.equipoDevuelto.equiNombre}" />
+								<h:outputText value="NRO. SERIE" />
+								<h:outputText value="#{beanEquipo.equipoDevuelto.equiNroSerie}" />
+								<h:outputText value="PROVEEDOR" />
+								<h:outputText
+									value="#{beanEquipo.equipoDevuelto.proveedor.proEmpresa}" />
+
+								<h:outputText value="RESPOSABLE" />
+								<h:outputText
+									value="#{beanEquipo.equipoDevuelto.responsable.respNombres}" />
+
+								<h:outputText value="DEPENDENCIA" />
+								<h:outputText
+									value="#{beanEquipo.equipoDevuelto.segDependencia.depDescripcion}" />
+
+								<h:outputText value="GARANTIA" />
+								<h:outputText value="#{beanEquipo.equipoDevuelto.equiGarantia}" />
+								<h:outputText value="PRECIO" />
+								<h:outputText value="#{beanEquipo.equipoDevuelto.equiValor}" />
+							</p:panelGrid>
+						</p>
+
+					</p:splitterPanel>
+					<!-- ________________________splitter 2 _______________________________________ -->
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						size="15">
+						<br />
+						<b><h:outputText value="ACCESORIOS" /></b>
+						<p:dataTable value="#{beanEquipo.equipoDevuelto.equipoAccesorios}"
+							var="EquipoAccesorios" style="width:300px">
+							<p:column headerText="NRO. SERIE" style="width:50px">
+								<h:outputText value="#{EquipoAccesorios.accesorio.acceNroSerie}" />
+							</p:column>
+							<p:column headerText="NOMBRE" style="width:50px">
+								<h:outputText value="#{EquipoAccesorios.accesorio.acceNombre}" />
+							</p:column>
+						</p:dataTable>
+
+					</p:splitterPanel>
+					<!-- ________________________splitter 3 _______________________________________ -->
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						size="15">
+						<br />
+						<b><h:outputText value="CARACTERISTICAS" /></b>
+						<p:dataTable value="#{beanEquipo.equipoDevuelto.equipoAtributos}"
+							var="EquipoAtributos" style="width:300px">
+							<p:column headerText="NOMBRE" style="width:50px">
+								<h:outputText value="#{EquipoAtributos.atributo.atriNombre}" />
+							</p:column>
+							<p:column headerText="VALOR" style="width:50px">
+								<h:outputText value="#{EquipoAtributos.atriDescripcion}" />
+							</p:column>
+						</p:dataTable>
+					</p:splitterPanel>
+				</p:splitter>
+			</div>
+		</h:form>
+
+	</p:dialog>
+
+	<!-- ************Ventana emergente para dar de baja un accesorio********** -->
+
+	<p:dialog widgetVar="dialogoAccesorioBaja" align="center"
+		header="Accesorio de Baja">
+		<h:form id="lista4">
+			<div align="center">
+				<p>
+					<p:panelGrid columns="4">
+						<h:outputText value="NOMBRE:" />
+						<h:outputText
+							value="#{beanBaja.seleccionBajaAccesorio.acceNombre}" />
+
+						<h:outputText value="NRO SERIE:" />
+						<h:outputText
+							value="#{beanBaja.seleccionBajaAccesorio.acceNroSerie}" />
+					</p:panelGrid>
+				</p>
+				<p>
+					<b><h:outputText value="OBSERVACIÓN" /></b>
+				</p>
+				<p:inputTextarea rows="6" style="width: 600px;"
+					value="#{beanBaja.nuevoBajaAccesorio.bajaDescripcion}" />
+				<p>
+					<p:panelGrid columns="3">
+						<h:outputText value="ESTADO:" />
+						<p:selectOneMenu id="option"
+							value="#{beanBaja.nuevoBajaAccesorio.bajaTipoObsolDania}">
+							<f:selectItem itemLabel="Selesccione" itemValue="" />
+							<f:selectItem itemLabel="Obsoleto" itemValue="OBSOLETO" />
+							<f:selectItem itemLabel="Dañado" itemValue="DAÑADO" />
+						</p:selectOneMenu>
+						<p:commandButton value="Dar de Baja" icon="pi pi-sort-amount-down"
+							styleClass="ui-button-danger"
+							actionListener="#{beanBaja.actionListenerInsertarNuevoAccesorioABaja()}"
+							update="@form,:lista2">
+							<p:confirm header="Confirmación"
+								message="Desea dar de baja este Accesorio?"
+								icon="pi pi-info-circle" />
+						</p:commandButton>
+					</p:panelGrid>
+				</p>
+			</div>
+		</h:form>
+	</p:dialog>
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+		responsive="true" width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+</body>
+</html>

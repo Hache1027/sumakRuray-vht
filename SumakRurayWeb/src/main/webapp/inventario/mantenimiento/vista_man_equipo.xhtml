@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Mantenimientos</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+			<p:menuitem value="Regresar" icon="pi pi-arrow-circle-left"
+				action="menu_man_equipo" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<br />
+	<h:form id="lista3">
+
+		<div align="center">
+			<p:splitter style="height: 50px; width:auto" styleClass="mb-5">
+				<!-- ________________________splitter 1 _______________________________________ -->
+				<p:splitterPanel>
+					<p>
+
+						<b> <h:outputText
+								value="Mantenimiento : #{beanMantenimiento.equipoMantenimientoSeleccionado.mantenimiento.manEstado}" />
+						</b>
+
+					</p>
+				</p:splitterPanel>
+			</p:splitter>
+
+			<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+				<!-- ________________________splitter 1 _______________________________________ -->
+
+
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="50" minSize="50">
+					<p>
+						<b><h:outputText value="INFORMACIÓN DEL EQUIPO" /></b>
+					</p>
+
+
+					<p:panelGrid columns="4">
+						<h:outputText value="EQUIPO" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.equipo.equiNombre}" />
+
+						<h:outputText value="NOMBRE" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.equipo.equiNombre}" />
+
+						<h:outputText value="RESPOSABLE" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.equipo.responsable.respNombres}" />
+
+						<h:outputText value="DEPENDENCIA" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.equipo.segDependencia.depDescripcion}" />
+						<h:outputText value="SERIE" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.equipo.equiNroSerie}" />
+
+						<h:outputText value="GARANTIA" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.equipo.equiNroSerie}" />
+						<h:outputText value="FUNCIONARIO ENTREGA" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.mantenimiento.manFuncionarioEntrega}" />
+
+						<h:outputText value=" FUNCIONARIO/EMPRESA QUE RECIBE" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.mantenimiento.manFuncionarioRecibe}" />
+						<h:outputText value="USUARIO QUE RECIBE (RETORNO)" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.mantenimiento.manUsuarioRecibe}" />
+					</p:panelGrid>
+					<br />
+					<p:panelGrid columns="2">
+						<h:outputText value="EXTERNO / INTERNO" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.mantenimiento.manTipoIntExt}" />
+						<h:outputText value="PREVENTIVO / CORRECTIVO" />
+						<h:outputText
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.mantenimiento.manTipoPreCorr}" />
+					</p:panelGrid>
+					<br />
+					<br />
+				</p:splitterPanel>
+
+				<!-- ________________________splitter 2 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="15">
+
+					<p>
+						<b><h:outputText value="CARACTERISTICAS" /></b>
+					</p>
+					<p:dataTable value="#{beanMantenimiento.listaAtributosEquipo}"
+						var="EquipoAtributos" style="width:300px" scrollable="true"
+						scrollHeight="240">
+						<p:column headerText="NOMBRE" style="width:50px">
+							<h:outputText value="#{EquipoAtributos.atributo.atriNombre}" />
+						</p:column>
+						<p:column headerText="VALOR" style="width:50px">
+							<h:outputText value="#{EquipoAtributos.atriDescripcion}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:splitterPanel>
+			</p:splitter>
+
+			<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+				<!-- ________________________splitter 3 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					minSize="25">
+					<br />
+					<b><h:outputText value="DESCRIPCION/PROBLEMA/DAÑO" /></b>
+					<p>
+						<h:outputText rows="6" style="width: 600px;"
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.mantenimiento.manDescripcion}" />
+					</p>
+				</p:splitterPanel>
+				<!-- ________________________splitter 1 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					minSize="50">
+					<br />
+
+
+					<b><h:outputText value="OBSERVACIÓN" /></b>
+					<p>
+						<h:outputText rows="6" style="width: 600px;"
+							value="#{beanMantenimiento.equipoMantenimientoSeleccionado.mantenimiento.manDiagnostico}" />
+					</p>
+
+				</p:splitterPanel>
+				<br />
+				<br />
+			</p:splitter>
+
+		</div>
+	</h:form>
+
+	<!-- ________________________VENTANA EMERGENTE CREAR DEPENDENCIA _______________________________________ -->
+
+	<p:dialog header="Crear Dependencia"
+		widgetVar="dialogoCrearDependencia">
+		<h:form id="formCrearDependencia">
+
+		</h:form>
+	</p:dialog>
+
+
+</body>
+</html>

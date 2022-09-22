@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Responsable</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+			<p:menuitem value="Proveedor" icon="pi pi-user-plus"
+				action="proveedors" />
+
+			<p:menuitem value="Responsable" icon="pi pi-user-plus"
+				action="responsable" />
+			<p:menuitem value="Responsable" icon="pi pi-plus"
+				title="Nuevo Responsable"
+				action="#{beanResponsable.actionNuevoResponsable()}"
+				oncomplete="PF('dialogoCrearResponsable').show()" />
+
+			<p:menuitem value="Dependencia" icon="pi pi-inbox"
+				action="dependencia" />
+
+			<p:menuitem value="Lista IPS" icon="pi pi-users"
+				action="#{beanListaIp.actionMenuListaIps()}" />
+
+
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form id="listaResponsable">
+			<p:dataTable value="#{beanResponsable.listaResponsables}"
+				var="Responsable" paginator="true" rows="5">
+				<p:column headerText="IDENTIFICACIÓN"
+					filterBy="#{Responsable.respIdentificacion}">
+					<h:outputText value="#{Responsable.respIdentificacion}" />
+				</p:column>
+				<p:column headerText="NOMBRES"
+					filterBy="#{Responsable.respNombres} " filterMatchMode="contains">
+					<h:outputText value="#{Responsable.respNombres}" />
+				</p:column>
+				<p:column headerText="APELLIDOS"
+					filterBy="#{Responsable.respApellidos} " filterMatchMode="contains">
+					<h:outputText value="#{Responsable.respApellidos}" />
+				</p:column>
+				<p:column headerText="TELEFONO"
+					filterBy="#{Responsable.respTelefono}" filterMatchMode="contains">
+					<h:outputText value="#{Responsable.respTelefono}" />
+				</p:column>
+				<p:column headerText="CARGO" filterBy="#{Responsable.respCargo}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Responsable.respCargo}" />
+				</p:column>
+				<p:column headerText="DIRECCIÓN"
+					filterBy="#{Responsable.respDireccionDomicilio}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Responsable.respDireccionDomicilio}" />
+				</p:column>
+				<p:column headerText="CORREO" filterBy="#{Responsable.respCorreo}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Responsable.respCorreo}" />
+				</p:column>
+				<p:column headerText="ESTADO" filterBy="#{Responsable.respEstado}"
+					filterMatchMode="contains">
+					<h:outputText value="#{Responsable.respEstado}" />
+				</p:column>
+
+				<p:column headerText="OPCIONES">
+
+					<p:commandButton icon="pi pi-pencil" title="editar Responsable"
+						actionListener="#{beanResponsable.actionSeleccionarEdicionResponsable(Responsable)}"
+						oncomplete="PF('dialogoEdicion').show()" update=":formEdicion" />
+
+					<p:commandButton icon="pi pi-times-circle"
+						title="activar/desactiva" styleClass="ui-button-danger"
+						update="@form,:listaResponsable"
+						actionListener="#{beanResponsable.actionListenerActivarDesactivarResponsable(Responsable.respId)}">
+						<p:confirm header="Confirmación"
+							message="Desea borrar este usuario?" icon="pi pi-info-circle" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+	<p:dialog header="Edición" widgetVar="dialogoEdicion">
+		<h:form id="formEdicion">
+			<p:panelGrid columns="2" layout="grid">
+				<h:outputText value="Teléfono:" />
+				<p:inputText
+					value="#{beanResponsable.edicionResponsable.respTelefono}"
+					required="true" requiredMessage="Ingrese el teléfono" />
+				<h:outputText value="Correo Electrónico:" />
+				<p:inputText
+					value="#{beanResponsable.edicionResponsable.respCorreo}"
+					required="true" requiredMessage="Ingrese el Correo Electrónico" />
+				<h:outputText value="Dirección:" />
+				<p:inputText
+					value="#{beanResponsable.edicionResponsable.respDireccionDomicilio}"
+					required="true" requiredMessage="Ingrese la Dirección" />
+				<h:outputText value="Cargo:" />
+				<p:inputText value="#{beanResponsable.edicionResponsable.respCargo}"
+					required="true" requiredMessage="Ingrese el Cargo" />
+
+				<p:commandButton value="Actualizar" icon="pi pi-save"
+					update="listaResponsable"
+					actionListener="#{beanResponsable.actionListenerActualizarEdicionResponsable()}"></p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Crear Responsable"
+		widgetVar="dialogoCrearResponsable">
+		<h:form id="formCrearResponsable">
+
+			<p:panelGrid columns="2" layout="grid">
+				<h:outputText value="Identificación:" />
+				<p:inputText
+					value="#{beanResponsable.nuevoResponsable.respIdentificacion}"
+					required="true" requiredMessage="Ingrese la Identificacion" />
+				<h:outputText value="Nombres:" />
+				<p:inputText value="#{beanResponsable.nuevoResponsable.respNombres}"
+					required="true" requiredMessage="Ingrese los Nombres" />
+				<h:outputText value="Apellidos:" />
+				<p:inputText
+					value="#{beanResponsable.nuevoResponsable.respApellidos}"
+					required="true" requiredMessage="Ingrese los Apellidos" />
+
+
+				<h:outputText value="Teléfono:" />
+				<p:inputText
+					value="#{beanResponsable.nuevoResponsable.respTelefono}"
+					required="true" requiredMessage="Ingrese el Teléfono" />
+				<h:outputText value="Correo electrónico:" />
+				<p:inputText value="#{beanResponsable.nuevoResponsable.respCorreo}"
+					required="true" requiredMessage="Ingrese el correo electrónico" />
+				<h:outputText value="Dirección:" />
+				<p:inputText
+					value="#{beanResponsable.nuevoResponsable.respDireccionDomicilio}"
+					required="true" requiredMessage="Ingrese la Direccion de Domicilio" />
+				<h:outputText value="Cargo:" />
+				<p:inputText value="#{beanResponsable.nuevoResponsable.respCargo}"
+					required="true" requiredMessage="Ingrese la Cargo" />
+
+
+
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanResponsable.actionListenerInsertarNuevoResponsable()}"
+					update="listaResponsable"></p:commandButton>
+			</p:panelGrid>
+
+
+		</h:form>
+	</p:dialog>
+
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+		responsive="true" width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+
+</body>
+</html>

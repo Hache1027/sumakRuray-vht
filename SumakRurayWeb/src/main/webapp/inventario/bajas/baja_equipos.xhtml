@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Mantenimientos</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+			<p:menuitem value="Accesorios de Baja" icon="pi pi-user-plus"
+				action="#{beanBaja.actionSelectionAccesoriosBajas()}" />
+			<p:menuitem value="Equipos  de Baja" icon="pi pi-user-plus"
+				action="#{beanBaja.actionSelectionEquiposBajas()}" />
+
+			<f:facet name="options">
+
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form>
+			<p:dataTable value="#{beanBaja.listaEquipoBajas}" var="equipoBaja"
+				paginator="true" rows="5">
+
+				<p:column headerText="EQUIPO"
+					filterBy="#{equipoBaja.equipo.equiNombre}"
+					filterMatchMode="contains">
+					<h:outputText value="#{equipoBaja.equipo.equiNombre}" />
+				</p:column>
+				<p:column headerText="NRO. SERIE"
+					filterBy="#{equipoBaja.equipo.equiNroSerie}"
+					filterMatchMode="contains">
+					<h:outputText value="#{equipoBaja.equipo.equiNroSerie}" />
+				</p:column>
+				<p:column headerText="FUNCIONARIO"
+					filterBy="#{equipoBaja.equipo.responsable.respNombres} #{equipoBaja.equipo.responsable.respApellidos}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{equipoBaja.equipo.responsable.respNombres} #{equipoBaja.equipo.responsable.respApellidos}" />
+				</p:column>
+				<p:column headerText="DEPENDENCIA"
+					filterBy="#{equipoBaja.equipo.segDependencia.depDescripcion}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{equipoBaja.equipo.segDependencia.depDescripcion}" />
+				</p:column>
+				<p:column headerText="ESTADO">
+					<h:outputText value="#{equipoBaja.equipo.equiEstado}" />
+				</p:column>
+				<p:column headerText="OPCIONES">
+					<p:commandButton icon="pi pi-eye" title="vista"
+						action="#{beanEquipo.actionVistaEquipo(equipoBaja.equipo)}"
+						styleClass="ui-button-warning" update="@form" />
+
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</body>
+</html>

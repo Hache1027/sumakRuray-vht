@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Mantenimientos</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+
+			<p:menuitem value="Accesorio Mantenimiento" icon="pi pi-user-plus"
+				action="#{beanMantenimiento.actionMenuMantenimientoAccesorio()}" />
+
+			<p:menuitem value="Equipo Mantenimiento" icon="pi pi-user-plus"
+				action="#{beanMantenimiento.actionMenuMantenimientoEquipo()}" />
+
+			<p:menuitem value="Equipo Mantenimiento Finalizado"
+				icon="pi pi-user-plus"
+				action="#{beanMantenimiento.actionMenuMantenimientoFinalizadoEquipo()}" />
+
+			<p:menuitem value="Nuevo Registro Equipo" icon="pi pi-user-plus"
+				action="#{beanMantenimiento.actionMenuNuevoMantenimientoEquipo()}" />
+
+
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form>
+			<p:dataTable value="#{beanMantenimiento.listaEquiManEstado}"
+				var="equipoMantenimiento" paginator="true" rows="5">
+				<p:column headerText="FECHA"
+					filterBy="#{equipoMantenimiento.mantenimiento.manFechaCreacion}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{equipoMantenimiento.mantenimiento.manFechaCreacion}" />
+				</p:column>
+				<p:column headerText="EQUIPO"
+					filterBy="#{equipoMantenimiento.equipo.equiNombre}"
+					filterMatchMode="contains">
+					<h:outputText value="#{equipoMantenimiento.equipo.equiNombre}" />
+				</p:column>
+				<p:column headerText="ULTIMO FUNCIONARIO"
+					filterBy="#{equipoMantenimiento.mantenimiento.manFuncionario}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{equipoMantenimiento.mantenimiento.manFuncionario}" />
+				</p:column>
+				<p:column headerText="EXT-INT"
+					filterBy="#{equipoMantenimientoTipoIntExt}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{equipoMantenimiento.mantenimiento.manTipoIntExt}" />
+				</p:column>
+				<p:column headerText="PRE-CORRE"
+					filterBy="#{equipoMantenimiento.mantenimiento.manTipoPreCorr}"
+					filterMatchMode="contains">
+					<h:outputText
+						value="#{equipoMantenimiento.mantenimiento.manTipoPreCorr}" />
+				</p:column>
+				<p:column headerText="ESTADO"
+					filterBy="#{equipoMantenimiento.mantenimiento.manEstado}}"
+					filterMatchMode="contains">
+
+					<h:outputText
+						value="#{equipoMantenimiento.mantenimiento.manEstado}" />
+				</p:column>
+				<p:column headerText="OPCIONES">
+					<p:commandButton icon="pi pi-eye" title="Observar"
+						styleClass="ui-button-warning"
+						action="#{beanMantenimiento.actionVistaEquipoMantenimiento(equipoMantenimiento)}" />
+					<p:commandButton icon="pi pi-eye" title="Observar"
+						styleClass="ui-button-warning"
+						action="#{beanMantenimiento.actionVistaEquipoMantenimiento(equipoMantenimiento)}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+
+
+
+
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+		responsive="true" width="350">
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no ui-button-flat" />
+		<p:commandButton value="Sí" type="button"
+			styleClass="ui-confirmdialog-yes" />
+	</p:confirmDialog>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Nuevo Equipo</title>
+	<link rel="stylesheet" type="text/css"
+		href="../../resources/css/SumakRuray.css" />
+
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<!-- ____________________________ENCABEZADO_________________________________ -->
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Menú" icon="pi pi-home"
+				action="/menu?faces-redirect=true" />
+			<p:menuitem value="Regresar" icon="pi pi-arrow-circle-left"
+				action="tipo_equipo" />
+			<p:menuitem value="Responsable" icon="pi pi-plus"
+				title="Nuevo Responsable"
+				action="#{beanResponsable.actionNuevoResponsable()}"
+				oncomplete="PF('dialogoCrearResponsable').show()" />
+			<p:menuitem value="Proveedor" icon="pi pi-plus"
+				title="Nuevo Proveedor"
+				action="#{beanResponsable.actionNuevoResponsable()}"
+				oncomplete="PF('dialogoCrearProveedor').show()" />
+			<p:menuitem value="Marca" icon="pi pi-plus" title="Nuevo Marca"
+				action="#{beanMarca.actionNuevoMarca()}"
+				oncomplete="PF('dialogoCrearTipoMarca').show()" />
+
+			<p:menuitem value="Dependencia" icon="pi pi-plus"
+				title="Nuevo Dependencia"
+				action="#{beanDependencia.actionNuevoSegDependencia()}"
+				oncomplete="PF('dialogoCrearDependencia').show()" />
+
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<!-- __________________________________CUERPO-PAGINA_____________________________________ -->
+
+
+	<h:form id="lista3">
+		<div align="center">
+			<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="60" minSize="60">
+					<!-- ________________________splitter 1 _______________________________________ -->
+					<p>
+						<b><h:outputText value="INFORMACIÓN DEL  EQUIPO" /></b>
+					</p>
+					<p>
+						<p:commandButton value="GUARDAR" icon="pi pi-save"
+							styleClass="rounded-button ui-button-help"
+							action="#{beanEquipo.actionListenerInsertarNuevoEquipo()}"
+							update="@form" />
+					</p>
+					<p:panelGrid columns="4" id="datosEquipo">
+						<h:outputText value="NOMBRE:" />
+						<p:inputText value="#{beanEquipo.nuevoEquipo.equiNombre}"
+							required="true" requiredMessage="Ingrese la cedula" />
+						<h:outputText value="NRO. SERIE:" />
+						<p:inputText value="#{beanEquipo.nuevoEquipo.equiNroSerie}"
+							required="true" requiredMessage="Ingrese los apellidos" />
+						<h:outputText value="COD: BODEGA:" />
+						<p:inputText value="#{beanEquipo.nuevoEquipo.equiCodBodega}"
+							required="true" requiredMessage="Ingrese el cod: Bodega" />
+						<h:outputText value="PRECIO:" />
+						<p:spinner value="#{beanEquipo.nuevoEquipo.equiValor}"
+							stepFactor="0.01" required="true"
+							requiredMessage="Ingrese el Precio" />
+
+						<h:outputText value="GARANTIA:" />
+						<p:spinner value="#{beanEquipo.nuevoEquipo.equiGarantia}"
+							stepFactor="1" required="true" />
+						<h:outputText value="PROVEEDOR" />
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanEquipo.proIdSeleccionado}" id="listaProveedor"
+							required="true" requiredMessage="Ingrese un Proveedor">
+							<f:selectItem itemLabel="Seleccione un proveedor..."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanProveedor.listaProveedors}" var="u"
+								itemLabel=" #{u.proEmpresa}" itemValue="#{u.proId}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="MARCA" />
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanEquipo.marIdSeleccionado}" id="listaMarca"
+							required="true" requiredMessage="Ingrese una marca">
+							<f:selectItem itemLabel="Seleccione una Marca..."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanMarca.listaMarcas}" var="u"
+								itemLabel=" #{u.marDescripcion}" itemValue="#{u.marId}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="DEPENDENCIA" />
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanEquipo.idSegDependenciaSeleccionado}"
+							required="true" requiredMessage="Ingrese una Dependencia"
+							id="listaDependencia">
+							<f:selectItem itemLabel="Seleccione una Depedencia..."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanDependencia.listaDependencias}"
+								var="u" itemLabel=" #{u.depDescripcion}"
+								itemValue="#{u.idSegDependencia}">
+							</f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="RESPONSABLE" />
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanEquipo.respIdSeleccionado}" id="listaResponsable"
+							required="true" requiredMessage="Ingrese un Responsable">
+							<f:selectItem itemLabel="Seleccione un responsable.."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanResponsable.listaResponsables}"
+								var="u" itemLabel=" #{u.respNombres } #{u.respApellidos }"
+								itemValue="#{u.respId}"></f:selectItems>
+						</p:selectOneMenu>
+
+						<p:commandButton value="ASIGNAR IP" icon="pi pi-wifi"
+							styleClass="rounded-button ui-button-help"
+							actionListener="#{beanEquipo.actionListenerAdicionarAccesorioAtributo('')}"
+							action="#{beanListaIp.actionNuevoIpAEquipo()}"
+							update="@form,:formCrearIp,:ipsSnEquipo" />
+
+					</p:panelGrid>
+					<p>
+						<b><h:outputText value="IP ASIGNADO" /></b>
+					</p>
+					<p:panelGrid columns="6" id="informacionIp">
+						<h:outputText value="IP" />
+						<h:outputText value="#{beanListaIp.escodigoListaIp.ipsIp}" />
+						<h:outputText value="PUERTA DE ENLACE" />
+						<h:outputText
+							value="#{beanListaIp.escodigoListaIp.ipsPuertaEnlace}" />
+					</p:panelGrid>
+					<br />
+					<br />
+				</p:splitterPanel>
+
+				<!-- ________________________splitter 2 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					size="25">
+					<p>
+						<b><h:outputText value="ACCESORIOS" /></b>
+					</p>
+					<p:menubar>
+						<p:menuitem value="Accesorio" icon="pi pi-plus"
+							styleClass="ui-button-warning" title="Nuevo Accesorio"
+							actionListener="#{beanEquipo.actionListenerAdicionarAccesorioAtributo('')}"
+							action="#{beanAccesorio.actionNuevoAccesorio()}" update=":lista2" />
+
+					</p:menubar>
+					<p:panelGrid columns="2">
+						<h:outputText value="Accesorios" />
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanEquipo.acceIdSeleccionado}" style="width:250px"
+							id="listaAccesoriosInactivos">
+							<f:selectItem itemLabel="Seleccione un Accesorio..."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanBodega.listaAccesorioBodegas}"
+								var="u" itemLabel=" #{u.acceNroSerie} #{u.acceNombre}"
+								itemValue="#{u.acceId}"></f:selectItems>
+						</p:selectOneMenu>
+
+						<p:commandButton title="Carrito" icon="pi pi-plus"
+							actionListener="#{beanEquipo.actionListenerAdicionarAccesorioAtributo('Accesorio')}"
+							update=":lista3:tablaAccesorios,:lista2,:lista3:listaAccesoriosInactivos "
+							styleClass="rounded-button ui-button-help" />
+
+					</p:panelGrid>
+					<p:dataTable value="#{beanEquipo.cabecera.equipoAccesorios}"
+						var="accesorios" style="width:300px" id="tablaAccesorios">
+						<p:column headerText="NRO. SERIE" style="width:50px">
+							<h:outputText value="#{accesorios.accesorio.acceNroSerie}" />
+						</p:column>
+						<p:column headerText="NOMBRE" style="width:50px">
+							<h:outputText value="#{accesorios.accesorio.acceNombre}" />
+						</p:column>
+						<p:column headerText="NOMBRE" style="width:10px">
+							<p:commandButton icon="pi pi-times"
+								styleClass="ui-button-success"
+								actionListener="#{beanEquipo.actionListenerQuitarAccesorio(accesorios.equipo.equiId,accesorios.accesorio.acceId)}"
+								update=":lista3:tablaAccesorios,:lista3:listaAccesoriosInactivos" />
+						</p:column>
+					</p:dataTable>
+				</p:splitterPanel>
+				<!-- ________________________splitter 3 _______________________________________ -->
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					minSize="25">
+					<p>
+						<b><h:outputText value="CARACTERISTICAS" /></b>
+					</p>
+					<p:menubar>
+						<p:menuitem value="Atributos" icon="pi pi-plus"
+							styleClass="ui-button-warning" title="Nuevo Dependencia"
+							action="#{beanSegRoles.actionMenuRoles()}"
+							oncomplete="PF('dialogoCrearAtributo').show()" />
+					</p:menubar>
+					<p:panelGrid columns="2">
+						<h:outputText value="Atributo" />
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanEquipo.atriIdSeleccionado}" id="listaAtributo"
+							style="width:250px">
+							<f:selectItem itemLabel="Seleccione un atributo..."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanAtributo.listaAtributos}" var="u"
+								itemLabel=" #{u.atriNombre}" itemValue="#{u.atriId}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="Valor o descripción" />
+						<p:inputText value="#{beanEquipo.valorAtributo}" />
+
+
+						<p:commandButton title="Carrito" icon="pi pi-plus"
+							actionListener="#{beanEquipo.actionListenerAdicionarAccesorioAtributo('Atributo')}"
+							update="@form" styleClass="rounded-button ui-button-help" />
+					</p:panelGrid>
+					<p:dataTable value="#{beanEquipo.cabecera.equipoAtributos}"
+						var="atributos" style="width:300px">
+						<p:column headerText="ATRIBUTO" style="width:10px">
+							<h:outputText value="#{atributos.atributo.atriNombre}" />
+						</p:column>
+						<p:column headerText="VALOR" style="width:50px">
+							<h:outputText value="#{atributos.atriDescripcion}" />
+						</p:column>
+					</p:dataTable>
+
+				</p:splitterPanel>
+
+
+
+			</p:splitter>
+		</div>
+	</h:form>
+
+	<!-- ________________________VENTANA PRINCIPAL CREAR ACCESORIOS _______________________________________ -->
+	<p:dialog header="Tipos de Accesorios Tecnológicos"
+		widgetVar="dialogoCrearAccesorio">
+		<h:form>
+			<p:menubar>
+				<p:menuitem value="Regresar" icon="pi pi-home"
+					action="tipoAccesorio" />
+				<p:menuitem value="Tipo Accesorio" icon="pi pi-plus"
+					title="Nuevo Proveedor"
+					oncomplete="PF('dialogoCrearTipoAccesorio').show()" />
+				<p:menuitem value="Atributos" icon="pi pi-plus"
+					title="Nuevo Dependencia"
+					action="#{beanSegRoles.actionMenuRoles()}"
+					oncomplete="PF('dialogoCrearAtributo').show()" />
+				<p:menuitem value="Responsable" icon="pi pi-plus"
+					title="Nuevo Responsable"
+					action="#{beanResponsable.actionNuevoResponsable()}"
+					oncomplete="PF('dialogoCrearResponsable').show()" />
+				<p:menuitem value="Proveedor" icon="pi pi-plus"
+					title="Nuevo Proveedor"
+					action="#{beanResponsable.actionNuevoResponsable()}"
+					oncomplete="PF('dialogoCrearProveedor').show()" />
+				<p:menuitem value="Marca" icon="pi pi-plus" title="Nuevo Marca"
+					action="#{beanMarca.actionNuevoMarca()}"
+					oncomplete="PF('dialogoCrearTipoMarca').show()" />
+			</p:menubar>
+		</h:form>
+		<h:form id="lista2">
+			<div align="center">
+				<p:splitter style="height: 500px; width:1600px" styleClass="mb-5">
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						size="130" minSize="60">
+						<p>
+							<b><h:outputText value="INFORMACIÓN DEL ACCESORIO" /></b>
+						</p>
+						<!-- ________________________splitter 1 Accesorio_________________________ -->
+
+						<p:panelGrid columns="4">
+							<h:outputText value="TIPO DE ACCESORIO" />
+							<p:selectOneMenu filterMatchMode="contains" filter="true"
+								value="#{beanAccesorio.tipAccIdSeleccionado}"
+								id="listaTipoAccesorio" required="true"
+								requiredMessage="Selecione el tipo de Accesorio">
+								<f:selectItem itemLabel="Seleccione un tipo de Accesorio..."
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{beanTipoAccesorio.actionTipoAccesorios()}" var="u"
+									itemLabel=" #{u.tipAccNombre}" itemValue="#{u.tipAccId}"></f:selectItems>
+							</p:selectOneMenu>
+							<h:outputText value="NOMBRE:" />
+							<p:inputText value="#{beanAccesorio.nuevoAccesorio.acceNombre}"
+								required="true" requiredMessage="Ingrese un Nombre" />
+							<h:outputText value="NRO. SERIE:" />
+							<p:inputText value="#{beanAccesorio.nuevoAccesorio.acceNroSerie}"
+								required="true" requiredMessage="Ingrese el Nro Serie" />
+							<h:outputText value="COD: BODEGA:" />
+							<p:inputText
+								value="#{beanAccesorio.nuevoAccesorio.acceCodBodega}"
+								required="true" requiredMessage="Ingrese el cod: Bodega" />
+							<h:outputText value="PRECIO:" />
+							<p:spinner value="#{beanAccesorio.nuevoAccesorio.accPrecio}"
+								stepFactor="0.01" required="true" />
+
+
+							<h:outputText value="PROVEEDOR" />
+							<p:selectOneMenu filterMatchMode="contains" filter="true"
+								value="#{beanAccesorio.proIdSeleccionado}" id="listaProveedor2">
+								<f:selectItem
+									itemLabel="#{beanAccesorio.nuevoAccesorio.proveedor.proEmpresa} "
+									noSelectionOption="true" />
+								<f:selectItems value="#{beanProveedor.listaProveedors}" var="u"
+									itemLabel=" #{u.proEmpresa}" itemValue="#{u.proId}"></f:selectItems>
+							</p:selectOneMenu>
+							<h:outputText value="MARCA" />
+							<p:selectOneMenu filterMatchMode="contains" filter="true"
+								value="#{beanAccesorio.marIdSeleccionado}" id="listaMarca2">
+								<f:selectItem
+									itemLabel="#{beanAccesorio.nuevoAccesorio.marca.marDescripcion} "
+									noSelectionOption="true" />
+								<f:selectItems value="#{beanMarca.listaMarcas}" var="u"
+									itemLabel=" #{u.marDescripcion}" itemValue="#{u.marId}"></f:selectItems>
+							</p:selectOneMenu>
+							<h:outputText value="RESPONSABLE" />
+							<h:outputText
+								value="#{beanAccesorio.nuevoAccesorio.responsable.respNombres} #{beanAccesorio.nuevoAccesorio.responsable.respApellidos}" />
+							<h:outputText value="DEPENDENCIA" />
+							<h:outputText
+								value="#{beanAccesorio.nuevoAccesorio.segDependencia.depDescripcion}" />
+						</p:panelGrid>
+
+					</p:splitterPanel>
+					<!-- ________________________splitter 2 Accesorio_________________________ -->
+
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						minSize="25">
+						<p>
+							<b><h:outputText value="CARACTERISTICAS" /></b>
+						</p>
+						<p:panelGrid columns="2">
+							<h:outputText value="Atributo" />
+							<p:selectOneMenu filterMatchMode="contains" filter="true"
+								value="#{beanAccesorio.atriIdSeleccionado}">
+								<f:selectItem itemLabel="Seleccione un atributo..."
+									noSelectionOption="true" />
+								<f:selectItems value="#{beanAtributo.listaAtributos}" var="u"
+									itemLabel=" #{u.atriNombre}" itemValue="#{u.atriId}"></f:selectItems>
+							</p:selectOneMenu>
+							<h:outputText value="Valor o descripción" />
+							<p:inputText value="#{beanAccesorio.valorAtributo}" />
+							<p:commandButton title="Carrito" icon="pi pi-plus"
+								actionListener="#{beanAccesorio.actionListenerAdicionarAtributo()}"
+								update="@form,lista2:tablaAtributo,"
+								styleClass="rounded-button ui-button-help" />
+
+							<p:commandButton value="SAVE" icon="pi pi-save"
+								update="@form,lista3:tablaAccesorios"
+								styleClass="rounded-button ui-button-help"
+								actionListener="#{beanAccesorio.actionListenerInsertarNuevoAccesorio()}"
+								action="#{beanEquipo.actionListenerAdicionarAccesorioAtributo('Accesorio')}">
+							</p:commandButton>
+						</p:panelGrid>
+						<p:dataTable value="#{beanAccesorio.cabecera.accesorioAtributos}"
+							var="atributos" style="width:300px" id="tablaAtributo">
+							<p:column headerText="ATRIBUTO" style="width:10px">
+								<h:outputText value="#{atributos.atributo.atriNombre}" />
+							</p:column>
+							<p:column headerText="VALOR" style="width:50px">
+								<h:outputText value="#{atributos.atriDescripcion}" />
+							</p:column>
+						</p:dataTable>
+
+					</p:splitterPanel>
+					<!-- ________________________splitter 3 Accesorio_________________________ -->
+
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						minSize="25">
+						<p>
+							<b><h:outputText value="ACCESORIOS DEL EQUIPO" /></b>
+						</p>
+						<p:dataTable value="#{beanEquipo.cabecera.equipoAccesorios}"
+							var="accesorios" style="width:300px">
+							<p:column headerText="NRO. SERIE" style="width:10px">
+								<h:outputText value="#{accesorios.accesorio.acceNroSerie}" />
+							</p:column>
+							<p:column headerText="NOMBRE" style="width:50px">
+								<h:outputText value="#{accesorios.accesorio.acceNombre}" />
+							</p:column>
+						</p:dataTable>
+
+					</p:splitterPanel>
+				</p:splitter>
+			</div>
+		</h:form>
+	</p:dialog>
+
+	<!-- ________________________VENTANA EMERGENTE CREAR RESPOSABLE _______________________________________ -->
+
+	<p:dialog header="Crear Responsable"
+		widgetVar="dialogoCrearResponsable">
+		<h:form id="formCrearResponsable">
+			<p:panelGrid columns="4">
+				<h:outputText value="Identificación:" />
+				<p:inputText
+					value="#{beanResponsable.nuevoResponsable.respIdentificacion}"
+					required="true" requiredMessage="Ingrese la Cédula" />
+				<h:outputText value="Nombres:" />
+				<p:inputText value="#{beanResponsable.nuevoResponsable.respNombres}"
+					required="true" requiredMessage="Ingrese los Nombres" />
+				<h:outputText value="Apellidos:" />
+				<p:inputText
+					value="#{beanResponsable.nuevoResponsable.respApellidos}"
+					required="true" requiredMessage="Ingrese los Apellidos" />
+				<h:outputText value="Teléfono:" />
+				<p:inputText
+					value="#{beanResponsable.nuevoResponsable.respTelefono}"
+					required="true" requiredMessage="Ingrese el Teléfono" />
+				<h:outputText value="Dirección:" />
+				<p:inputText
+					value="#{beanResponsable.nuevoResponsable.respDireccionDomicilio}"
+					required="true" requiredMessage="Ingrese la Dirección" />
+				<h:outputText value="Correo electrónico:" />
+				<p:inputText value="#{beanResponsable.nuevoResponsable.respCorreo}"
+					required="true" requiredMessage="Ingrese el Correo electrónico" />
+				<h:outputText value="Cargo:" />
+				<p:inputText value="#{beanResponsable.nuevoResponsable.respCargo}"
+					required="true" requiredMessage="Ingrese el Cargo" />
+
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanResponsable.actionListenerInsertarNuevoResponsable()}"
+					update="@form,:lista3:listaResponsable"></p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+	<!-- ________________________VENTANA EMERGENTE CREAR PROVEEDOR _______________________________________ -->
+
+	<p:dialog header="Crear Proveedor" widgetVar="dialogoCrearProveedor">
+		<h:form id="formCrearProveedor">
+			<p:panelGrid columns="2">
+				<h:outputText value="Empresa:" />
+				<p:inputText value="#{beanProveedor.nuevoProveedor.proEmpresa}"
+					required="true" requiredMessage="Ingrese la Empresa" />
+				<h:outputText value="Teléfono:" />
+				<p:inputText value="#{beanProveedor.nuevoProveedor.proTelefono}"
+					required="true" requiredMessage="Ingrese el Teléfono" />
+				<h:outputText value="Correo electrónico:" />
+				<p:inputText value="#{beanProveedor.nuevoProveedor.proCorreo}"
+					required="true" requiredMessage="Ingrese el correo electrónico" />
+				<h:outputText value="Dirección:" />
+				<p:inputText value="#{beanProveedor.nuevoProveedor.proDireccion}"
+					required="true" requiredMessage="Ingrese la Dirección" />
+
+
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanProveedor.actionListenerInsertarNuevoProveedor()}"
+					update="@form,:lista3:listaProveedor,:lista2:listaProveedor2"></p:commandButton>
+
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+	<!-- ________________________VENTANA EMERGENTE CREAR ATRIBUTO _______________________________________ -->
+
+	<p:dialog header="Crear Atributo" widgetVar="dialogoCrearAtributo">
+		<h:form id="formCrearAtributo">
+			<p:panelGrid columns="2">
+				<h:outputText value="Descripción:" />
+				<p:inputText value="#{beanAtributo.nuevoAtributo.atriNombre}"
+					required="true" requiredMessage="Ingrese el nombre del atributo" />
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanAtributo.actionListenerInsertarNuevoAtributo()}"
+					update="@form,:lista3:listaAtributo"></p:commandButton>
+
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<!-- ________________________VENTANA EMERGENTE CREAR TIPO MARCA _______________________________________ -->
+
+	<p:dialog header="Crear tipo Marca" widgetVar="dialogoCrearTipoMarca">
+		<h:form id="formCrearTipoMarca">
+			<p:panelGrid columns="2">
+				<h:outputText value="Descripción:" />
+				<p:inputText value="#{beanMarca.nuevoMarca.marDescripcion}"
+					required="true" requiredMessage="Ingrese la Marca" />
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanMarca.actionListenerInsertarNuevoMarca()}"
+					update="@form,:lista3:listaMarca,:lista2:listaMarca2"></p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+	<!-- ________________________VENTANA EMERGENTE CREAR DEPENDENCIA _______________________________________ -->
+
+	<p:dialog header="Crear Dependencia"
+		widgetVar="dialogoCrearDependencia">
+		<h:form id="formCrearDependencia">
+			<p:panelGrid columns="2">
+				<h:outputText value="Descripción:" />
+				<p:inputText
+					value="#{beanDependencia.nuevoSegDependencia.depDescripcion}"
+					required="true" requiredMessage="Ingrese la Dependencia" />
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanDependencia.actionListenerInsertarNuevoSegDependencia()}"
+					update="@form,:lista3:listaDependencia"></p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+	<!-- ________________________VENTANA EMERGENTE CREAR TIPO ACCESORIO _______________________________________ -->
+	<p:dialog header="Crear Tipo Accesorio"
+		widgetVar="dialogoCrearTipoAccesorio">
+		<h:form id="formCrearTipoAccesorio">
+			<p:panelGrid columns="2">
+				<h:outputText value="Accesorio:" />
+				<p:inputText
+					value="#{beanTipoAccesorio.nuevoTipoAccesorio.tipAccNombre}"
+					required="true" requiredMessage="Ingrese el tipo de Accesorio" />
+
+
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{beanTipoAccesorio.actionListenerInsertarNuevoTipoAccesorio()}"
+					update="@form,:lista2:listaTipoAccesorio"></p:commandButton>
+
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+	<!-- ________________________VENTANA EMERGENTE CREAR IP_______________________________________ -->
+
+	<p:dialog header="ASINGAR IP" widgetVar="dialogoCrearIp">
+
+		<div align="center">
+			<p:splitter style="height: 500px; width:1600px" styleClass="mb-5">
+
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					minSize="60">
+					<h:form id="formCrearIp">
+						<br />
+						<br />
+						<p:panelGrid columns="4">
+							<h:outputText value="IP" />
+							<p:inputText value="#{beanListaIp.nuevoListaIp.ipsIp}"
+								required="true" requiredMessage="Ingrese una Ip" />
+							<h:outputText value="PUERTA DE ENLACE" />
+							<p:inputText value="#{beanListaIp.nuevoListaIp.ipsPuertaEnlace}"
+								required="true" requiredMessage="Ingrese una Ip" />
+							<p:commandButton value="ASIGNAR" icon="pi pi-sign-in"
+								actionListener="#{beanListaIp.actionSeleccionarNuevoListaIp(beanListaIp.nuevoListaIp)}"
+								update="@form,:lista3:informacionIp"></p:commandButton>
+						</p:panelGrid>
+						<p>
+							<b><h:outputText value="IP ASIGNADO ANTERIORMENTE" /></b>
+						</p>
+						<p:panelGrid columns="4">
+							<h:outputText value="IP" />
+							<h:outputText value="#{beanListaIp.ultimoListaIp.ipsIp}" />
+							<h:outputText value="PUERTA DE ENLACE" />
+							<h:outputText
+								value="#{beanListaIp.ultimoListaIp.ipsPuertaEnlace}" />
+							<h:outputText value="MAC ADRESS" />
+							<h:outputText value="#{beanListaIp.ultimoListaIp.ipsMacAdress}" />
+							<h:outputText value="EQUIPO" />
+							<h:outputText
+								value="#{beanListaIp.ultimoListaIp.equipo.equiNombre}" />
+						</p:panelGrid>
+					</h:form>
+				</p:splitterPanel>
+
+
+				<p:splitterPanel
+					styleClass="flex align-items-center justify-content-center"
+					minSize="50">
+					<h:form id="ipsSnEquipo">
+						<p>
+							<b><h:outputText value="IPS NO ASIGNADOS" /></b>
+						</p>
+						<p:dataTable value="#{beanListaIp.listaIpsSnEquipo}" var="listaIp"
+							scrollable="true" scrollHeight="240" >
+							<p:column style="width:20px">
+								<p:commandButton icon="pi pi-arrow-left"
+									action="#{beanListaIp.actionSeleecionarIpAEquipo(listaIp)}"
+									update=":formCrearIp" styleClass="ui-button-warning" />
+							</p:column>
+							<p:column headerText="IP " filterBy="#{listaIp.ipsIp}"
+								filterMatchMode="contains">
+								<h:outputText value="#{listaIp.ipsIp}" />
+							</p:column>
+							<p:column headerText="PUERTA DE ENLACE"
+								filterBy="#{listaIp.ipsPuertaEnlace}" filterMatchMode="contains">
+								<h:outputText value="#{listaIp.ipsPuertaEnlace}" />
+							</p:column>
+
+						</p:dataTable>
+					</h:form>
+
+				</p:splitterPanel>
+			</p:splitter>
+		</div>
+	</p:dialog>
+
+
+</body>
+</html>
