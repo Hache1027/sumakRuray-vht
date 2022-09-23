@@ -30,12 +30,29 @@
 	</h:form>
 	<p:panel>
 		<h:form>
-			<h:outputText value="Fecha inicio:" />
+			<h:outputText value="Fecha inicio: &nbsp;"  /> 
 			<p:datePicker value="#{beanBitacora.fechaInicio}" showTime="true" />
-			<h:outputText value="Fecha fin:" />
-			<p:datePicker value="#{beanBitacora.fechaFin}" showTime="true" />
-			<p:commandButton update="@form" value="Consultar" icon="pi pi-clock"
-				actionListener="#{beanBitacora.actionListenerConsultarBitacoraAccesorio()}" />
+			<h:outputText value="&nbsp; Fecha fin: &nbsp;" />
+			<p:datePicker value="#{beanBitacora.fechaFin }" showTime="true" />
+			
+			&nbsp; <p:commandButton update="@form" value="Consultar" icon="pi pi-clock"
+				actionListener="#{beanBitacora.actionListenerConsultarBitacoraAccesorio()}"/>
+				
+				<br /><br /><p:panelGrid columns="3" >
+						<h:outputText value="Accesorios" /> 
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanBitacora.acceIdSeleccionado}" style="width:250px">
+							<f:selectItem itemLabel="Seleccione un Accesorio..."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanAccesorio.listaAccesoriosAll}"
+								var="u" itemLabel="#{u.acceNombre}"
+								itemValue="#{u.acceId}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:commandButton update="@form" value="Imprimir" icon="pi pi-print" ajax="false"
+				action="#{beanBitacora.actionReporteBitacoraAccesorio(beanBitacora.acceIdSeleccionado)}" />
+						
+					</p:panelGrid>
+		
 			<p:dataTable value="#{beanBitacora.listaBitacoraAccesorio}" var="b"
 				emptyMessage="No hay registros aún." paginator="true" rows="30">
 				<p:column headerText="ID" style="width:50px">
@@ -54,7 +71,8 @@
 					<h:outputText value="#{b.accesorio.segDependencia.depDescripcion}" />
 				</p:column>
 				<p:column headerText="RESPONSABLE">
-					<h:outputText value="#{b.accesorio.responsable.respNombres} #{b.accesorio.responsable.respApellidos}" />
+					<h:outputText
+						value="#{b.accesorio.responsable.respNombres} #{b.accesorio.responsable.respApellidos}" />
 				</p:column>
 				<p:column headerText="METODO">
 					<h:outputText value="#{b.bitAcceEvento}" />

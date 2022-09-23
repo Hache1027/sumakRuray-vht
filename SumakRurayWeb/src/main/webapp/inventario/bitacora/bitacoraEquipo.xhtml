@@ -9,7 +9,7 @@
 		type="preRenderView"></f:event>
 </f:metadata>
 <h:head>
-	<title>Bitácora Equipo</title>
+	<title>Bitácora Accesorio</title>
 </h:head>
 <body>
 	<p:growl>
@@ -30,28 +30,28 @@
 	</h:form>
 	<p:panel>
 		<h:form>
-			<h:outputText value="Fecha inicio:" />
+			<h:outputText value="Fecha inicio: &nbsp;" />
 			<p:datePicker value="#{beanBitacora.fechaInicio}" showTime="true" />
-			<h:outputText value="Fecha fin:" />
+			<h:outputText value="&nbsp; Fecha fin: &nbsp;" />
 			<p:datePicker value="#{beanBitacora.fechaFin}" showTime="true" />
-
-			<p:commandButton update="@form" value="Consultar" icon="pi pi-clock"
-				actionListener="#{beanBitacora.actionListenerConsultarBitacoraEquipo()}" />
-			<p:panelGrid columns="2">
-				<h:outputText value="Equipos" />
-				<p:selectOneMenu filterMatchMode="contains" filter="true"
-					value="#{beanBitacora.equiIdSeleccionado}" style="width:250px">
-					<f:selectItem itemLabel="Seleccione un Equipo..."
-						noSelectionOption="true" />
-					<f:selectItems value="#{beanEquipo.listaEquiposAll}" var="u"
-						itemLabel="#{u.equiNombre}" itemValue="#{u.equiId}"></f:selectItems>
-				</p:selectOneMenu>
-
-
-			</p:panelGrid>
-
-
-
+			
+			&nbsp;<p:commandButton update="@form" value="Consultar" icon="pi pi-clock"
+				actionListener="#{beanBitacora.actionListenerConsultarBitacoraEquipo()}"/>
+				
+				<br /><br /><p:panelGrid columns="3" >
+						<h:outputText value="Equipos" /> 
+						<p:selectOneMenu filterMatchMode="contains" filter="true"
+							value="#{beanBitacora.equiIdSeleccionado}" style="width:250px">
+							<f:selectItem itemLabel="Seleccione un Equipo..."
+								noSelectionOption="true" />
+							<f:selectItems value="#{beanEquipo.listaEquiposAll}"
+								var="u" itemLabel="#{u.equiNombre}"
+								itemValue="#{u.equiId}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:commandButton update="@form" value="Imprimir" icon="pi pi-print" ajax="false"
+				action="#{beanBitacora.actionReporteBitacoraEquipo(beanBitacora.equiIdSeleccionado)}" />					
+					</p:panelGrid> 
+					
 			<p:dataTable value="#{beanBitacora.listaBitacoraEquipo}" var="b"
 				emptyMessage="No hay registros aún." paginator="true" rows="30">
 				<p:column headerText="ID" style="width:50px">

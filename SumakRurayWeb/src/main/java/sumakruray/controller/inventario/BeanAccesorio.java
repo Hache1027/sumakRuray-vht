@@ -98,6 +98,8 @@ public class BeanAccesorio implements Serializable {
 	private Accesorio edicionAccesorio;
 	private Accesorio vistaAccesorio;
 	private Accesorio accesorioBodega;
+	private List<Accesorio> listaAccesoriosAll;
+	
 	// Cabecera
 	private Accesorio cabecera;
 
@@ -150,6 +152,11 @@ public class BeanAccesorio implements Serializable {
 	}
 	// **********************--___ACCESORIO__--******************************************
 
+	// Inicializar Variables
+			public void actionRecargarListaAccesoriosAll() throws Exception {
+				listaAccesoriosAll = managerAccesorio.findAllAccesorios();
+			}
+			
 	/**
 	 * Consultas de Accesorios dependiendo su estado
 	 * 
@@ -232,7 +239,7 @@ public class BeanAccesorio implements Serializable {
 	 */
 	public void actionNuevoAccesorio() throws Exception {
 		inicializarVaribalesAccesorio();
-		// Condición para verificar si se esta creando un accesorio nuevo apartir de un
+		// Condiciï¿½n para verificar si se esta creando un accesorio nuevo apartir de un
 		// equipo nuevo
 		if (beanEquipo.getCabecera() != null) {
 			if (beanEquipo.getCabecera().getResponsable() != null) {
@@ -321,7 +328,7 @@ public class BeanAccesorio implements Serializable {
 			}
 			// Insertar Accesorio con o sin Atributos
 			managerAccesorio.registrarAccesorio(beanSegLogin.getLoginDTO(), cabecera);
-			// Método para identficar el nuevo accesorio creado desde un nuevo equipo
+			// Mï¿½todo para identficar el nuevo accesorio creado desde un nuevo equipo
 
 			try {
 				if (beanEquipo.getCabecera() != null) {
@@ -336,7 +343,7 @@ public class BeanAccesorio implements Serializable {
 				e.printStackTrace();
 			}
 
-			// Método para verificar si se crea el accesorio desde un nuevo equipo
+			// Mï¿½todo para verificar si se crea el accesorio desde un nuevo equipo
 			if (beanEquipo.getCabecera() == null) {
 				inicializarVaribalesAccesorio();
 			} else {
@@ -347,7 +354,7 @@ public class BeanAccesorio implements Serializable {
 			}
 			actionConsultarListaAccesoriosActivos();
 
-			JSFUtil.crearMensajeINFO("Accesorio insertado ¡Exitamente!");
+			JSFUtil.crearMensajeINFO("Accesorio insertado ï¿½Exitamente!");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeERROR(e.getMessage());
 			e.printStackTrace();
@@ -413,7 +420,7 @@ public class BeanAccesorio implements Serializable {
 	}
 
 	/**
-	 * Selecciona el Accesorio para la edición
+	 * Selecciona el Accesorio para la ediciï¿½n
 	 * 
 	 * @param accesorio
 	 * @return
@@ -556,7 +563,7 @@ public class BeanAccesorio implements Serializable {
 				accesorio.setAcceEstado("Inactivo");
 
 				managerAccesorio.actualizarEstadoAccesorio(beanSegLogin.getLoginDTO(), accesorio, "Inactivo", enlace);
-				// Buscar y eliminar la relación del accesorio en un equipo
+				// Buscar y eliminar la relaciï¿½n del accesorio en un equipo
 				equiposDevuelto = managerEquipo.findEquiAcceByOneAcce(accesorio.getAcceId());
 
 				if (equiposDevuelto.size() > 0) {
@@ -784,5 +791,15 @@ public class BeanAccesorio implements Serializable {
 	public void setAccesorioBodega(Accesorio accesorioBodega) {
 		this.accesorioBodega = accesorioBodega;
 	}
+
+	public List<Accesorio> getListaAccesoriosAll() {
+		return listaAccesoriosAll;
+	}
+
+	public void setListaAccesoriosAll(List<Accesorio> listaAccesoriosAll) {
+		this.listaAccesoriosAll = listaAccesoriosAll;
+	}
+	
+	
 
 }

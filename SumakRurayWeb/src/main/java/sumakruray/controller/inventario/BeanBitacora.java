@@ -42,6 +42,8 @@ public class BeanBitacora implements Serializable {
 	private ManagerBitacora managerBitacora;
 	@Inject
 	private BeanEquipo beanEquipo;
+	@Inject
+	private BeanAccesorio beanAccesorio;
 	@EJB
 	private ManagerAccesorio managerAccesorio;
 	@EJB
@@ -80,7 +82,7 @@ public class BeanBitacora implements Serializable {
 	private Date fechaInicio;
 	private Date fechaFin;
 
-	public String actionCargarMenuBitacoraAccesorio() {
+	public String actionCargarMenuBitacoraAccesorio() throws Exception {
 		// obtener la fecha de ayer:
 		fechaInicio = ModelUtil.addDays(new Date(), -1);
 		// obtener la fecha de hoy:
@@ -88,7 +90,9 @@ public class BeanBitacora implements Serializable {
 
 		listaBitacoraAccesorio = managerBitacora.findBitacoraAccesorioByFecha(fechaInicio, fechaFin);
 		JSFUtil.crearMensajeINFO("Registros encontrados: " + listaBitacoraAccesorio.size());
+		beanAccesorio.actionRecargarListaAccesoriosAll();
 		return "bitacoraAccesorio";
+	
 	}
 
 	public String actionCargarMenuBitacoraEquipo() throws Exception {
@@ -165,6 +169,75 @@ public class BeanBitacora implements Serializable {
 	}
 	
 	 // REPORTES
+	
+	// Metodo del Reporte de Bitacora Accesorio
+
+		public String actionReporteBitacoraAccesorio(int acceID) {
+			System.out.println("ADIOSSSSSSSSSSSSSSSSSSSSSSSSSSSS -----------------------------------");
+			Map<String, Object> parametros = new HashMap<String, Object>();
+			/*
+			 * parametros.put("p_titulo_principal",p_titulo_principal);
+			 * parametros.put("p_titulo",p_titulo);
+			 */ FacesContext context = FacesContext.getCurrentInstance();
+			ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+			String ruta = servletContext
+					.getRealPath("resources/jasper/reporteBitacora/ReporteAccesorioBitacoraFinal.jasper");
+			HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+			response.addHeader("Content-disposition", "attachment;filename=reporteBitacoraAccesorio.pdf");
+			response.setContentType("application/pdf");
+			parametros.put("acce_ID", acceID);
+			System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZ ---------" + acceID);
+			try {
+				Class.forName("org.postgresql.Driver");
+				System.out.println("Driver");
+				Connection connection = null;
+				connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sumakruray2", "postgres",
+						"vicoc123");
+				JasperPrint impresion = JasperFillManager.fillReport(ruta, parametros, connection);
+				JasperExportManager.exportReportToPdfStream(impresion, response.getOutputStream());
+				context.getApplication().getStateManager().saveView(context);
+				System.out.println("Reporte de Bitacora Accesorio Generado Correctamente.");
+				context.responseComplete();
+			} catch (Exception e) {
+				JSFUtil.crearMensajeERROR(e.getMessage());
+				e.printStackTrace();
+			}
+			return "";
+		}
+
+		// Metodo del Reporte de Bitacora Equipo
+
+		public String actionReporteBitacoraEquipo(int equiID) {
+			System.out.println("ADIOSSSSSSSSSSSSSSSSSSSSSSSSSSSS -----------------------------------");
+			Map<String, Object> parametros = new HashMap<String, Object>();
+			/*
+			 * parametros.put("p_titulo_principal",p_titulo_principal);
+			 * parametros.put("p_titulo",p_titulo);
+			 */ FacesContext context = FacesContext.getCurrentInstance();
+			ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+			String ruta = servletContext.getRealPath("resources/jasper/reporteBitacora/ReporteEquipoBitacoraFinal.jasper");
+			HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+			response.addHeader("Content-disposition", "attachment;filename=reporteBitacoraEquipo.pdf");
+			response.setContentType("application/pdf");
+			parametros.put("equi_ID", equiID);
+			System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZ ---------" + equiID);
+			try {
+				Class.forName("org.postgresql.Driver");
+				System.out.println("Driver");
+				Connection connection = null;
+				connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sumakruray2", "postgres",
+						"vicoc123");
+				JasperPrint impresion = JasperFillManager.fillReport(ruta, parametros, connection);
+				JasperExportManager.exportReportToPdfStream(impresion, response.getOutputStream());
+				context.getApplication().getStateManager().saveView(context);
+				System.out.println("Reporte de Bitacora Equipo Generado Correctamente.");
+				context.responseComplete();
+			} catch (Exception e) {
+				JSFUtil.crearMensajeERROR(e.getMessage());
+				e.printStackTrace();
+			}
+			return "";
+		}
 	
 	// Metodo del Reporte de Atributos de un Accesorio 
 
