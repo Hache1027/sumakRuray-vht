@@ -36,6 +36,14 @@ public class BeanAtributo implements Serializable {
 	private AccesorioAtributo edicionAccesorioAtributo;
 	// Equipo Atributo
 	private EquipoAtributo edicionEquipoAtributo;
+	
+	// CAMBIOS REALIZADOS HACHE
+	
+	private List<Atributo> listaAtributosEquipo;
+	private List<AccesorioAtributo> listAccesorioAtributo;
+	private List<EquipoAtributo> listEquipoAtributo;
+	
+	// --------------------- HACHE ---------------------
 
 	@Inject
 	private BeanSegLogin beanSegLogin;
@@ -49,6 +57,15 @@ public class BeanAtributo implements Serializable {
 	// **********************--___ARIBUTOS__--******************************************
 	@PostConstruct
 	public void inicializar() {
+		
+		listaAtributos = managerAtributo.findBitacoraAccesorioAtributosLista();
+		listaAtributosEquipo = managerAtributo.findBitacoraEquipoAtributosLista();
+		for (int i = 0; i < listaAtributosEquipo.size(); i++) {
+			System.out.println(listaAtributosEquipo.get(i).getAtriId());
+
+		}
+		
+		nuevoAtributo = new Atributo(); 
 	}
 
 	/**
@@ -92,7 +109,7 @@ public class BeanAtributo implements Serializable {
 		try {
 			managerAtributo.actualizarAccesorioAtributo(beanSegLogin.getLoginDTO(), edicionAccesorioAtributo);
 			beanMantenimiento.ActionfindAccesorio();
-			JSFUtil.crearMensajeINFO("Caracteristica Actualizo ¡Exitosamente!");
+			JSFUtil.crearMensajeINFO("Caracteristica Actualizo ï¿½Exitosamente!");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeERROR(e.getMessage());
 			e.printStackTrace();
@@ -106,7 +123,7 @@ public class BeanAtributo implements Serializable {
 		try {
 			managerAtributo.actualizarEquipoAtributo(beanSegLogin.getLoginDTO(), edicionEquipoAtributo);
 			beanMantenimiento.ActionfindEquipo();
-			JSFUtil.crearMensajeINFO("Caracteristica Actualizo ¡Exitosamente!");
+			JSFUtil.crearMensajeINFO("Caracteristica Actualizo ï¿½Exitosamente!");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeERROR(e.getMessage());
 			e.printStackTrace();
@@ -166,6 +183,18 @@ public class BeanAtributo implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	// CAMBIOS REALIZADOS POR HACHE 
+	
+	// Escoger Atributos para editar
+		public void actionSeleccionarAccesorioAtributo() {
+			listAccesorioAtributo = managerAtributo.findAllAccesoriosAtributos();
+			listEquipoAtributo = managerAtributo.findAllEquiposAtributos();
+		}
+	
+	// ------------------------------------------------- HACHE --------------------------------------------
+	
+	
 	// *****************--__Getter and
 	// Setter__--************************************+
 
@@ -208,6 +237,38 @@ public class BeanAtributo implements Serializable {
 	public void setEdicionEquipoAtributo(EquipoAtributo edicionEquipoAtributo) {
 		this.edicionEquipoAtributo = edicionEquipoAtributo;
 	}
+
+	
+	
+	// GETTERS AND SETTERS CREADOS POR HACHE ----------------------
+	
+	public List<Atributo> getListaAtributosEquipo() {
+		return listaAtributosEquipo;
+	}
+
+	public void setListaAtributosEquipo(List<Atributo> listaAtributosEquipo) {
+		this.listaAtributosEquipo = listaAtributosEquipo;
+	}
+
+	public List<AccesorioAtributo> getListAccesorioAtributo() {
+		return listAccesorioAtributo;
+	}
+
+	public void setListAccesorioAtributo(List<AccesorioAtributo> listAccesorioAtributo) {
+		this.listAccesorioAtributo = listAccesorioAtributo;
+	}
+
+	public List<EquipoAtributo> getListEquipoAtributo() {
+		return listEquipoAtributo;
+	}
+
+	public void setListEquipoAtributo(List<EquipoAtributo> listEquipoAtributo) {
+		this.listEquipoAtributo = listEquipoAtributo;
+	}
+	
+	
+	
+	// --------------------------------------------------------- HACHE --------------------------------
 	
 
 }

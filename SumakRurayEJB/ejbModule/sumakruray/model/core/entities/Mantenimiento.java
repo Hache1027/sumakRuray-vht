@@ -61,11 +61,11 @@ public class Mantenimiento implements Serializable {
 	private String manUsuarioRecibe;
 
 	//bi-directional many-to-one association to AccesorioMantenimiento
-	@OneToMany(mappedBy="mantenimiento")
+	@OneToMany(mappedBy="mantenimiento", cascade = CascadeType.ALL)
 	private List<AccesorioMantenimiento> accesorioMantenimientos;
 
 	//bi-directional many-to-one association to EquipoMantenimiento
-	@OneToMany(mappedBy="mantenimiento")
+	@OneToMany(mappedBy="mantenimiento", cascade = CascadeType.ALL)
 	private List<EquipoMantenimiento> equipoMantenimientos;
 
 	public Mantenimiento() {

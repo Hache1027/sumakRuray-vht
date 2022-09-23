@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 import sumakruray.model.auditoria.managers.ManagerAuditoria;
 import sumakruray.model.core.entities.Accesorio;
@@ -50,7 +51,7 @@ public class ManagerAtributo {
 		atributo.setAtriNombre(edicionAtributo.getAtriNombre());
 		mDAO.actualizar(atributo);
 		mAuditoria.mostrarLog(loginDTO, getClass(), "actualizarAtributo",
-				"se actualizó al Atributo " + atributo.getAtriNombre());
+				"se actualizï¿½ al Atributo " + atributo.getAtriNombre());
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class ManagerAtributo {
 		mDAO.actualizar(edicionAccesorioAtributo);
 		managerBitacora.mostrarLogAccesorio(loginDTO, edicionAccesorioAtributo.getAccesorio(),
 				"ActualizarCaracteristica",
-				"Se actualizó la caracteristica " + edicionAccesorioAtributo.getAtributo().getAtriNombre() + " a : "
+				"Se actualizï¿½ la caracteristica " + edicionAccesorioAtributo.getAtributo().getAtriNombre() + " a : "
 						+ edicionAccesorioAtributo.getAtriDescripcion());
 	}
 
@@ -71,7 +72,7 @@ public class ManagerAtributo {
 	public void actualizarEquipoAtributo(LoginDTO loginDTO, EquipoAtributo edicionEquipoAtributo) throws Exception {
 		mDAO.actualizar(edicionEquipoAtributo);
 		managerBitacora.mostrarLogEquipo(loginDTO, edicionEquipoAtributo.getEquipo(), "ActualizarCaracteristica",
-				"Se actualizó la caracteristica " + edicionEquipoAtributo.getAtributo().getAtriNombre() + " a : "
+				"Se actualizï¿½ la caracteristica " + edicionEquipoAtributo.getAtributo().getAtriNombre() + " a : "
 						+ edicionEquipoAtributo.getAtriDescripcion());
 	}
 
@@ -89,5 +90,40 @@ public class ManagerAtributo {
 		return (Atributo) mDAO.findById(Atributo.class, atriId);
 	}
 	// *********************************ATRIBUTOS*********************************************************************************************
+	
+	// CAMBIOS REALIZADOS POR HACHE 
+	
+	// Metodo para Consultar los Atributos de un Equipo
+
+		public List<Atributo> findBitacoraEquipoAtributosLista() {
+			String consulta1 = "select DISTINCT a from EquipoAtributo ea, Atributo a where ea.atributo.atriId = a.atriId ";
+			Query q = mDAO.getEntityManager().createQuery(consulta1, Atributo.class);
+			return q.getResultList();
+
+		}
+		// Metodo para Consultar los Atributos de un Accesorio
+
+		public List<Atributo> findBitacoraAccesorioAtributosLista() {
+			String consulta1 = "select DISTINCT a from AccesorioAtributo aa, Atributo a where aa.atributo.atriId = a.atriId ";
+			Query q = mDAO.getEntityManager().createQuery(consulta1, Atributo.class);
+			return q.getResultList();
+
+		}
+	
+	/**
+	 * Consultar todos los registros de la tabla AccesriosAtributos
+	 */
+	public List<AccesorioAtributo> findAllAccesoriosAtributos() {
+		return mDAO.findAll(AccesorioAtributo.class, null);
+	}
+
+	/**
+	 * Consultar todos los registros de la tabla EquiposAtributos
+	 */
+	public List<EquipoAtributo> findAllEquiposAtributos() {
+		return mDAO.findAll(EquipoAtributo.class, null);
+	}
+	
+	// ----------------------------------------------------------------- HACHE ------------------------------------------------
 
 }

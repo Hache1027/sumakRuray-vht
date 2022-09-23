@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 import sumakruray.model.auditoria.managers.ManagerAuditoria;
 import sumakruray.model.core.entities.Accesorio;
@@ -94,7 +95,7 @@ public class ManagerAccesorio {
 	}
 
 	/**
-	 * Eliminado Físico de un registro de la tabla Accesorio(No utilizado)
+	 * Eliminado Fï¿½sico de un registro de la tabla Accesorio(No utilizado)
 	 */
 	public void eliminarAtributoAccesorio(int atriId) throws Exception {
 		mDAO.eliminar(AccesorioAtributo.class, atriId);
@@ -118,8 +119,8 @@ public class ManagerAccesorio {
 		if (estado.equals("Inactivo_Equipo")) {
 			mDAO.actualizar(edicionAccesorio);
 			// Auditoria del los eventos
-			managerBitacora.mostrarLogAccesorio(loginDTO, edicionAccesorio, "AñadirAccesorioAEquipo",
-					"Accesorio añadido al Equipo " + equipo.getEquiNombre() + " de Bodega ");
+			managerBitacora.mostrarLogAccesorio(loginDTO, edicionAccesorio, "Aï¿½adirAccesorioAEquipo",
+					"Accesorio aï¿½adido al Equipo " + equipo.getEquiNombre() + " de Bodega ");
 		} else if (estado.equals("Activo")) {
 			Accesorio accesorio = (Accesorio) mDAO.findById(Accesorio.class, edicionAccesorio.getAcceId());
 			enlace += " <>  Asignado Responsable a : " + edicionAccesorio.getResponsable().getRespApellidos();
@@ -164,7 +165,7 @@ public class ManagerAccesorio {
 			String valorAtributo)
 
 			throws Exception {
-		// Verificación de la creación del Mestro Accesorio
+		// Verificaciï¿½n de la creaciï¿½n del Mestro Accesorio
 		if (cabecera == null) {
 
 			cabecera = new Accesorio();
@@ -202,7 +203,7 @@ public class ManagerAccesorio {
 	 * Insertar un nuevo Accesorio
 	 */
 	public void registrarAccesorio(LoginDTO loginDTO, Accesorio cabecera) throws Exception {
-		// verificación del Maestro Accesorio
+		// verificaciï¿½n del Maestro Accesorio
 		if (cabecera == null)
 			throw new Exception("Debe Ingresar los datos Correspondientes");
 		// Suma del tipo de accesorio que se este ingresando
@@ -214,7 +215,7 @@ public class ManagerAccesorio {
 		// Insertar un nuevo Accesorio
 		mDAO.insertar(cabecera);
 
-		managerBitacora.mostrarLogAccesorio(loginDTO, cabecera, "insertarAccesorio", " Creación del Accesorio");
+		managerBitacora.mostrarLogAccesorio(loginDTO, cabecera, "insertarAccesorio", " Creaciï¿½n del Accesorio");
 	}
 
 	/**
@@ -293,13 +294,12 @@ public class ManagerAccesorio {
 	 * Actualizar un registro de Accesorio para Bodega o Mantenimiento
 	 */
 
-	public void actualizarEstadoAccesorio(LoginDTO loginDTO, Accesorio edicionAccesorio, String estado,
-			String Observación) throws Exception {
+	public void actualizarEstadoAccesorio(LoginDTO loginDTO, Accesorio edicionAccesorio, String estado, String Observacion) throws Exception {
 		if (estado.equals("Inactivo")) {
 			mDAO.actualizar(edicionAccesorio);
 			// Auditoria del los eventos
 			managerBitacora.mostrarLogAccesorio(loginDTO, edicionAccesorio, "AccesorioBodega",
-					"Accesorio Enviado a Bodega, Observación : " + Observación);
+					"Accesorio Enviado a Bodega, Observacion : " + Observacion);
 		} else if (estado.equals("Activo")) {
 			mDAO.actualizar(edicionAccesorio);
 			// Auditoria del los eventos
@@ -310,7 +310,7 @@ public class ManagerAccesorio {
 			mDAO.actualizar(edicionAccesorio);
 			// Auditoria del los eventos
 			managerBitacora.mostrarLogAccesorio(loginDTO, edicionAccesorio, "MantenimientoAccesorio",
-					" Accesorio en Mantenimiento por: " + Observación);
+					" Accesorio en Mantenimiento por: " + Observacion);
 
 		}
 
@@ -331,4 +331,30 @@ public class ManagerAccesorio {
 	public List<AccesorioAtributo> findWhereByAcceAtriId(int acceId, int atriId) throws Exception {
 		return mDAO.findWhere(AccesorioAtributo.class, "acce_id=" + acceId + " and atri_id=" + atriId, null);
 	}
+	
+	// CAMBIOS REALIZADOS POR HACHE --------------------------------------------------------
+	
+	/**
+	 * Consulta de registros de un Accesorio y sus Atributos por su atributo y valor
+	 */
+	public List<AccesorioAtributo> findAccesorioByAtriIdandValor(int atriId, String valor) throws Exception {
+		return mDAO.findWhere(AccesorioAtributo.class, "atri_id=" + atriId + " and atri_descripcion='" + valor + "'",
+				null);
+	}
+	
+	public List<AccesorioAtributo> findAtributosValorAccesorio(String atriNombre) {
+		
+		String consulta1 = "select aa from AccesorioAtributo aa where aa.acceAtriId = (select max(aaa.acceAtriId) from AccesorioAtributo aaa "
+				+ "inner join Atributo a on aaa.atributo.atriId = a.atriId where a.atriNombre = '" + atriNombre + "')";
+		
+		Query q = mDAO.getEntityManager().createQuery(consulta1, AccesorioAtributo.class);
+		return (List<AccesorioAtributo>) q.getResultList();
+
+	}
+	
+	
+	
+	// ------------------------------------------------------ HACHE -----------------------------------
+	
+	
 }

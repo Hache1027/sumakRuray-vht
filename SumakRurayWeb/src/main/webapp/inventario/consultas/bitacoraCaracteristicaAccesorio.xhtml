@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Bitácora Accesorio</title>
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Regresar" icon="pi pi-home" action="menu" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h:form>
+
+			<p:panelGrid columns="6">
+				<h:outputText value="Caracteristica a Buscar" />
+				<p:selectOneMenu filterMatchMode="contains" filter="true"
+					value="#{beanBitacora.atriAcceIdSeleccionado}" style="width:300px">
+					<f:selectItem itemLabel="Seleccione un Atributo..."
+						noSelectionOption="true" />
+					<f:selectItems value="#{beanAtributo.listaAtributos}"
+						var="u" itemLabel="#{u.atriNombre}" itemValue="#{u.atriId}"></f:selectItems>
+				</p:selectOneMenu>
+				<p:commandButton update="@form" value="Consultar Valores"
+					icon="pi pi-clock"
+					action="#{beanBitacora.actionListenerConsultarBitacoraAccesorioCaracteristicaValor(beanBitacora.atriAcceIdSeleccionado)}" />
+
+				<h:outputText value="Valor" />
+				<p:selectOneMenu filterMatchMode="contains" filter="true"
+					value="#{beanBitacora.valorAtriAccesorioSelecionado}" style="width:300px">
+					<f:selectItem itemLabel="Seleccione un Valor..."
+						noSelectionOption="true" />
+					<f:selectItems value="#{beanBitacora.listAccesorioAtributoValor}"
+						var="u" itemLabel="#{u.atriDescripcion}"
+						itemValue="#{u.atriDescripcion}"></f:selectItems>
+				</p:selectOneMenu>
+
+				<p:commandButton update="@form" value="Consultar" icon="pi pi-clock"
+					action="#{beanBitacora.actionListenerConsultarBitacoraAccesorioCaracteristica(beanBitacora.atriAcceIdSeleccionado,beanBitacora.valorAtriAccesorioSelecionado)}" />
+					
+			</p:panelGrid>
+		 	<br />
+			<p:commandButton update="@form" value="Imprimir" icon="pi pi-print" ajax="false"
+				action="#{beanBitacora.actionReporteAtributoAccesorio(beanBitacora.atriAcceIdSeleccionado)}" />
+
+			<p:dataTable value="#{beanBitacora.listAccesorioAtributo}" var="b"
+				emptyMessage="No hay registros aún." paginator="true" rows="30">
+				<p:column headerText="ACCESORIO" style="width:50px">
+					<h:outputText value="#{b.accesorio.acceNombre}" />
+				</p:column>
+
+				<p:column headerText="CARACTERISTICA">
+					<h:outputText value="#{b.atributo.atriNombre}" />
+				</p:column>
+				<p:column headerText="VALOR">
+					<h:outputText value="#{b.atriDescripcion}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</body>
+</html>

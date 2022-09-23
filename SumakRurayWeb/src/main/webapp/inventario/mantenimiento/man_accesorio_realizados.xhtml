@@ -47,8 +47,7 @@
 	</h:form>
 	<p:panel>
 		<h:form>
-			<p:dataTable
-				value="#{beanMantenimiento.listaAcceManEstado}"
+			<p:dataTable value="#{beanMantenimiento.listaAcceManEstado}"
 				var="accesorioMantenimiento" paginator="true" rows="5">
 				<p:column headerText="FECHA"
 					filterBy="#{accesorioMantenimiento.mantenimiento.manFechaCreacion}"
@@ -93,10 +92,10 @@
 					<p:commandButton icon="pi pi-eye" title="Observar"
 						styleClass="ui-button-warning"
 						action="#{beanMantenimiento.actionVistaAccesorioMantenimiento(accesorioMantenimiento)}" />
-						<p:commandButton icon="pi pi-eye" title="Observar"
-						styleClass="ui-button-warning"
-						action="#{beanMantenimiento.actionVistaAccesorioMantenimiento(accesorioMantenimiento)}" />
-					
+					<p:commandButton icon="pi pi-book" title="Generar Reporte"
+						ajax="false" styleClass="ui-button-help"
+						action="#{beanMantenimiento.actionReporteAccesorio(accesorioMantenimiento.mantenimiento.manId)}" />
+
 				</p:column>
 			</p:dataTable>
 		</h:form>

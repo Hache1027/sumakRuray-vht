@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 import sumakruray.model.auditoria.managers.ManagerAuditoria;
 import sumakruray.model.core.entities.Accesorio;
@@ -129,7 +130,7 @@ public class ManagerEquipo {
 			Accesorio accesorio = equipo.getEquipoAccesorios().get(i).getAccesorio();
 			enlace += " <> " + accesorio.getAcceNombre() + " - " + accesorio.getAcceNroSerie();
 			managerBitacora.mostrarLogAccesorio(loginDTO, accesorio, "Insertar nuevo Equipo",
-					accesorio.getAcceNombre() + " añadido al Equipo Nuevo " + equipo.getEquiNombre());
+					accesorio.getAcceNombre() + " aï¿½adido al Equipo Nuevo " + equipo.getEquiNombre());
 
 		}
 		enlace += " con las Cacareristicas : ";
@@ -149,7 +150,7 @@ public class ManagerEquipo {
 
 		mDAO.insertar(equipo);
 
-		managerBitacora.mostrarLogEquipo(loginDTO, equipo, "insertarEquipo", " Creación del Equipo " + enlace);
+		managerBitacora.mostrarLogEquipo(loginDTO, equipo, "insertarEquipo", " Creaciï¿½n del Equipo " + enlace);
 	}
 
 	/**
@@ -305,7 +306,7 @@ public class ManagerEquipo {
 	}
 
 	/**
-	 * Eliminado Físico de un Resgitro de un Equipo(No utilizado)
+	 * Eliminado Fï¿½sico de un Resgitro de un Equipo(No utilizado)
 	 */
 	public void deleteEquiAccByAccId(EquipoAccesorio equipoAccesorio) throws Exception {
 		mDAO.eliminar(EquipoAccesorio.class, equipoAccesorio.getEquiAccId());
@@ -377,5 +378,30 @@ public class ManagerEquipo {
 	}
 
 	// *********************************EquipoS*********************************************************************************************
+	
+	// CAMBIOS REALIZADOS HACHE -------------------------------------------------------
+	
+	/**
+	 * Consulta de registros de un Equipo y sus Atributos por su atributo y valor
+	 */
+	public List<EquipoAtributo> findEquipoByAtriIdandValor(int atriId, String valor) throws Exception {
+		return mDAO.findWhere(EquipoAtributo.class, "atri_id=" + atriId + " and atri_descripcion='" + valor + "'",
+				null);
+	}
+	
+	public List<EquipoAtributo> findAtributosValorEquipo(String atriNombre) {
+		//	String consulta1 = "select ea from EquipoAtributo  ea, Atributo a where a.atriId = ea.atributo.atriId "
+			//		+ "and a.atriNombre = '" + atriNombre + "'";
+			
+			String consulta1 = "select ea from EquipoAtributo ea where ea.equiAtriId = (select max(aaa.equiAtriId) from EquipoAtributo aaa inner "
+					+ "join Atributo a on aaa.atributo.atriId = a.atriId where a.atriNombre = '" + atriNombre + "')";
+
+			
+			Query q = mDAO.getEntityManager().createQuery(consulta1, EquipoAtributo.class);
+			return q.getResultList();
+		}
+	
+	// ----------------------------------------------------- HACHE ---------------------------------------------------
+	
 
 }

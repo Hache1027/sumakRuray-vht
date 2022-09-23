@@ -1,16 +1,26 @@
 package sumakruray.controller.inventario;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import sumakruray.controller.JSFUtil;
 import sumakruray.controller.seguridades.BeanSegLogin;
 import sumakruray.model.core.entities.Accesorio;
@@ -170,7 +180,7 @@ public class BeanMantenimiento implements Serializable {
 	}
 
 	/**
-	 * edición de Equipo Mantenimiento
+	 * ediciï¿½n de Equipo Mantenimiento
 	 * 
 	 * @param equipoMantenimientoSeleccion
 	 * @return
@@ -188,7 +198,7 @@ public class BeanMantenimiento implements Serializable {
 	}
 
 	/**
-	 * edición de Accesorio Mantenimiento
+	 * ediciï¿½n de Accesorio Mantenimiento
 	 * 
 	 * @param AccesorioMantenimientoSeleccion
 	 * @return
@@ -293,7 +303,7 @@ public class BeanMantenimiento implements Serializable {
 			edicionEquipoMantenimiento.getMantenimiento()
 					.setManUsuarioModifica(persona.getPerNombres() + " " + persona.getPerApellidos());
 
-			System.out.println(".....................ññññ");
+			System.out.println(".....................ï¿½ï¿½ï¿½ï¿½");
 			managerMantenimiento.actualizarEquipoMantenimiento(beanSegLogin.getLoginDTO(), edicionEquipoMantenimiento);
 			listaEquipoMantenimientos = managerMantenimiento.findAllEquipoMantenimientos();
 			actionRecargarListaEquiposMantenimiento("Enviado");
@@ -316,7 +326,7 @@ public class BeanMantenimiento implements Serializable {
 			edicionAccesorioMantenimiento.getMantenimiento()
 					.setManUsuarioModifica(persona.getPerNombres() + " " + persona.getPerApellidos());
 
-			System.out.println(".....................ññññ");
+			System.out.println(".....................ï¿½ï¿½ï¿½ï¿½");
 
 			managerMantenimiento.actualizarAccesorioMantenimiento(beanSegLogin.getLoginDTO(),
 					edicionAccesorioMantenimiento);
@@ -346,7 +356,7 @@ public class BeanMantenimiento implements Serializable {
 		return "man_nuevo_accesorio";
 	}
 
-	// Cambiar a la página vistaV AccesorioMantenimiento
+	// Cambiar a la pï¿½gina vistaV AccesorioMantenimiento
 	public String actionVistaAccesorioMantenimiento(AccesorioMantenimiento AccesorioMantenimientoSeleccion)
 			throws Exception {
 
@@ -369,6 +379,45 @@ public class BeanMantenimiento implements Serializable {
 		equipoDevuelto = beanEquipo.ActionBuscarAcceAtriOfEquipo(equipoDevuelto);
 
 	}
+	
+	// CAMBIOS REALIZADOS POR HACHE 
+	
+	// Reporte en Jasper de Accesorio Mantenimiento
+	
+	public String actionReporteAccesorio(int manID) {
+		System.out.println("ZZZZZZZZZZZZZZ--------------------------MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		/*
+		 * parametros.put("p_titulo_principal",p_titulo_principal);
+		 * parametros.put("p_titulo",p_titulo);
+		 */ FacesContext context = FacesContext.getCurrentInstance();
+		ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+		String ruta = servletContext.getRealPath("resources/jasper/reporteAccesorio/ReporteAccesorioFinal.jasper");
+		HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+		response.addHeader("Content-disposition", "attachment;filename=reporteAccesorio.pdf");
+		response.setContentType("application/pdf");
+		parametros.put("man_ID", manID);
+		System.out.println("HO0LAAAAAAAAAAAAAAAAAAA ---------------------------------");
+		System.out.println(manID);
+		try {
+			Class.forName("org.postgresql.Driver");
+			System.out.println("Driver");
+			Connection connection = null;
+			connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sumakruray2", "postgres",
+					"vicoc123");
+			JasperPrint impresion = JasperFillManager.fillReport(ruta, parametros, connection);
+			JasperExportManager.exportReportToPdfStream(impresion, response.getOutputStream());
+			context.getApplication().getStateManager().saveView(context);
+			System.out.println("Reporte de Accesorio Generado Correctamente.");
+			context.responseComplete();
+		} catch (Exception e) {
+			JSFUtil.crearMensajeERROR(e.getMessage());
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	// ----------------------------------------------------------- HACHE ----------------------------------------
 
 	// Accion actualizar AccesorioMantenimiento
 
