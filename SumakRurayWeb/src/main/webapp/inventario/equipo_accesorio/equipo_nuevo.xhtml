@@ -31,7 +31,7 @@
 				oncomplete="PF('dialogoCrearResponsable').show()" />
 			<p:menuitem value="Proveedor" icon="pi pi-plus"
 				title="Nuevo Proveedor"
-				action="#{beanResponsable.actionNuevoResponsable()}"
+				action="#{beanProveedor.actionNuevoProveedor()}"
 				oncomplete="PF('dialogoCrearProveedor').show()" />
 			<p:menuitem value="Marca" icon="pi pi-plus" title="Nuevo Marca"
 				action="#{beanMarca.actionNuevoMarca()}"
@@ -86,10 +86,12 @@
 						<p:spinner value="#{beanEquipo.nuevoEquipo.equiValor}"
 							stepFactor="0.01" required="true"
 							requiredMessage="Ingrese el Precio" />
-
 						<h:outputText value="GARANTIA:" />
 						<p:spinner value="#{beanEquipo.nuevoEquipo.equiGarantia}"
 							stepFactor="1" required="true" />
+						<h:outputText value="AÑOS UTIL :" />
+						<p:spinner value="#{beanEquipo.nuevoEquipo.equiAnoVidaUtil}"
+							required="true" style=" width:100px" />
 						<h:outputText value="PROVEEDOR" />
 						<p:selectOneMenu filterMatchMode="contains" filter="true"
 							value="#{beanEquipo.proIdSeleccionado}" id="listaProveedor"
@@ -210,7 +212,7 @@
 					<p:menubar>
 						<p:menuitem value="Atributos" icon="pi pi-plus"
 							styleClass="ui-button-warning" title="Nuevo Dependencia"
-							action="#{beanSegRoles.actionMenuRoles()}"
+							action="#{beanAtributo.actionNuevoAtributos()}"
 							oncomplete="PF('dialogoCrearAtributo').show()" />
 					</p:menubar>
 					<p:panelGrid columns="2">
@@ -257,11 +259,11 @@
 				<p:menuitem value="Regresar" icon="pi pi-home"
 					action="tipoAccesorio" />
 				<p:menuitem value="Tipo Accesorio" icon="pi pi-plus"
-					title="Nuevo Proveedor"
+					title="Nuevo Tipo Accesorio"
 					oncomplete="PF('dialogoCrearTipoAccesorio').show()" />
 				<p:menuitem value="Atributos" icon="pi pi-plus"
-					title="Nuevo Dependencia"
-					action="#{beanSegRoles.actionMenuRoles()}"
+					title="Nuevo Atributo"
+					action="#{beanAtributo.actionNuevoAtributos()}"
 					oncomplete="PF('dialogoCrearAtributo').show()" />
 				<p:menuitem value="Responsable" icon="pi pi-plus"
 					title="Nuevo Responsable"
@@ -352,7 +354,7 @@
 						<p:panelGrid columns="2">
 							<h:outputText value="Atributo" />
 							<p:selectOneMenu filterMatchMode="contains" filter="true"
-								value="#{beanAccesorio.atriIdSeleccionado}">
+								value="#{beanAccesorio.atriIdSeleccionado}" id="listaAtributo">
 								<f:selectItem itemLabel="Seleccione un atributo..."
 									noSelectionOption="true" />
 								<f:selectItems value="#{beanAtributo.listaAtributos}" var="u"
@@ -481,7 +483,7 @@
 					required="true" requiredMessage="Ingrese el nombre del atributo" />
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanAtributo.actionListenerInsertarNuevoAtributo()}"
-					update="@form,:lista3:listaAtributo"></p:commandButton>
+					update="@form,:lista3:listaAtributo,:lista2:listaAtributo"></p:commandButton>
 
 			</p:panelGrid>
 		</h:form>
@@ -568,8 +570,7 @@
 							<h:outputText value="PUERTA DE ENLACE" />
 							<h:outputText
 								value="#{beanListaIp.ultimoListaIp.ipsPuertaEnlace}" />
-							<h:outputText value="MAC ADRESS" />
-							<h:outputText value="#{beanListaIp.ultimoListaIp.ipsMacAdress}" />
+
 							<h:outputText value="EQUIPO" />
 							<h:outputText
 								value="#{beanListaIp.ultimoListaIp.equipo.equiNombre}" />
@@ -586,7 +587,7 @@
 							<b><h:outputText value="IPS NO ASIGNADOS" /></b>
 						</p>
 						<p:dataTable value="#{beanListaIp.listaIpsSnEquipo}" var="listaIp"
-							scrollable="true" scrollHeight="240" >
+							scrollable="true" scrollHeight="240">
 							<p:column style="width:20px">
 								<p:commandButton icon="pi pi-arrow-left"
 									action="#{beanListaIp.actionSeleecionarIpAEquipo(listaIp)}"

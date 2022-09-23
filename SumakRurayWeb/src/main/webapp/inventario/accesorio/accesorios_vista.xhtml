@@ -58,13 +58,13 @@
 						<h:outputText value="GARANTIA:" />
 						<h:outputText value="#{beanAccesorio.vistaAccesorio.acceGarantia}" />
 						<h:outputText value="AÑOS UTIL:" />
-						<h:outputText value="#{beanAccesorio.vistaAccesorio.acceAnoVidaUtil}" />
-						
-						<h:outputText value="VIDA UTIL:" />
-						<h:outputText value="#{beanAccesorio.vistaAccesorio.acceAnoVidaUtil}" />
+						<h:outputText
+							value="#{beanAccesorio.vistaAccesorio.acceAnoVidaUtil}" />
+
 						<h:outputText value="VALOR DEPRECIADO:" />
-						<h:outputText value="#{beanAccesorio.vistaAccesorio.acceAnoVidaUtil}" />
-						
+						<h:outputText
+							value="#{beanAccesorio.vistaAccesorio.acceAnoVidaUtil}" />
+
 						<h:outputText value="RESPONSABLE" />
 						<h:outputText
 							value="#{beanAccesorio.vistaAccesorio.responsable.respNombres} #{beanAccesorio.vistaAccesorio.responsable.respApellidos}" />
@@ -79,22 +79,38 @@
 							value="#{beanAccesorio.vistaAccesorio.segDependencia.depDescripcion} " />
 
 					</p:panelGrid>
-					<p>
-						<b><h:outputText value="EQUIPO QUE PERTENECE" /></b>
-					</p>
-					<p:panelGrid columns="4">
-						<h:outputText value="NOMBRE" />
-						<h:outputText
-							value="#{beanAccesorio.equipoDevuelto.equipo.equiNombre}   " />
-						<h:outputText value="NRO. SERIE " />
-						<h:outputText
-							value=" #{beanAccesorio.equipoDevuelto.equipo.equiNroSerie} " />
-					</p:panelGrid>
+					<br />
+					<p:splitterPanel>
+						<p:panelGrid columns="4">
+
+							<h:outputText value="VIDA UTIL" />
+							<h:outputText value="#{beanAccesorio.vidaUtil}" />
+							<h:outputText value="VALOR DEPRECIADO" />
+							<h:outputText value="#{beanAccesorio.valorDepreciado}" />
+
+						</p:panelGrid>
+						<br />
+					</p:splitterPanel>
+					<p:splitterPanel>
+						<p>
+							<b><h:outputText value="EQUIPO QUE PERTENECE" /></b>
+						</p>
+						<p:panelGrid columns="4">
+							<h:outputText value="NOMBRE" />
+							<h:outputText
+								value="#{beanAccesorio.equipoDevuelto.equipo.equiNombre}   " />
+							<h:outputText value="NRO. SERIE " />
+							<h:outputText
+								value=" #{beanAccesorio.equipoDevuelto.equipo.equiNroSerie} " />
+						</p:panelGrid>
 
 
 
+
+					</p:splitterPanel>
 
 				</p:splitterPanel>
+
 				<p:splitterPanel
 					styleClass="flex align-items-center justify-content-center"
 					minSize="25">

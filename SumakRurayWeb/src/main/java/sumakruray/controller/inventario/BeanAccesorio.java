@@ -2,6 +2,9 @@ package sumakruray.controller.inventario;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -25,6 +28,7 @@ import sumakruray.model.core.entities.BodegaAccesorio;
 import sumakruray.model.core.entities.BodegaEquipo;
 import sumakruray.model.core.entities.Equipo;
 import sumakruray.model.core.entities.EquipoAccesorio;
+import sumakruray.model.core.entities.ListaIp;
 import sumakruray.model.core.entities.Marca;
 import sumakruray.model.core.entities.Persona;
 import sumakruray.model.core.entities.Proveedor;
@@ -32,6 +36,7 @@ import sumakruray.model.core.entities.Responsable;
 import sumakruray.model.core.entities.SegDependencia;
 import sumakruray.model.core.entities.TipoAccesorio;
 import sumakruray.model.inventario.managers.ManagerAccesorio;
+import sumakruray.model.inventario.managers.ManagerBitacora;
 import sumakruray.model.inventario.managers.ManagerBodega;
 import sumakruray.model.inventario.managers.ManagerDependencia;
 import sumakruray.model.inventario.managers.ManagerEquipo;
@@ -85,6 +90,8 @@ public class BeanAccesorio implements Serializable {
 	@Inject
 	private BeanMarca beanMarca;
 	@Inject
+	private BeanBitacora beanBitacora;
+	@Inject
 	private BeanAtributo beanAtributo;
 	// Accesorios
 	private List<Accesorio> listaAccesoriosActivos;
@@ -133,6 +140,10 @@ public class BeanAccesorio implements Serializable {
 	// --------Extras
 	private int tipAccIdSeleccionado;
 	private boolean verificador_mantenimiento;
+	private String vidaUtil;
+	private String valorDepreciado;
+	private boolean verificadorNuevoAccesorio;
+
 	// Tiempo
 	private Timestamp tiempo;
 
@@ -259,12 +270,13 @@ public class BeanAccesorio implements Serializable {
 	 * @throws Exception
 	 */
 
-	public void actionListenerAdicionarAtributo() throws Exception {
-
+	public void actionListenerAdicionarAtributo(String verificador) throws Exception {
+		System.out.println(verificador + "m----");
 		String add = "ADD";
 		if (cabecera == null) {
 			AsignarValoresNuevoAcesorios();
-		} else if (cabecera != null) {
+		} else if (cabecera != null && !verificador.equals("SinAtributo")) {
+
 			for (int i = 0; i < cabecera.getAccesorioAtributos().size(); i++) {
 				int id = cabecera.getAccesorioAtributos().get(i).getAtributo().getAtriId();
 				if (id == atriIdSeleccionado) {
@@ -273,11 +285,13 @@ public class BeanAccesorio implements Serializable {
 					break;
 				}
 			}
+
 			if (add.equals("ADD")) {
 				cabecera = managerAccesorio.adicionarAtributo(cabecera, nuevoAccesorio, atriIdSeleccionado,
 						valorAtributo);
 			}
 			beanMantenimiento.setAccesorioDevuelto(cabecera);
+
 		}
 	}
 
@@ -319,27 +333,25 @@ public class BeanAccesorio implements Serializable {
 			if (cabecera == null) {
 				AsignarValoresNuevoAcesorios();
 			}
+			if (verificadorNuevoAccesorio) {
+				cabecera.setSegDependencia(managerDependencia.findByIdSegDependencia(idSegDependenciaSeleccionado));
+				cabecera.setResponsable(managerResponsable.findByIdResponsable(respIdSeleccionado));
+
+			}
 			// Insertar Accesorio con o sin Atributos
 			managerAccesorio.registrarAccesorio(beanSegLogin.getLoginDTO(), cabecera);
 			// Método para identficar el nuevo accesorio creado desde un nuevo equipo
 
-			try {
-				if (beanEquipo.getCabecera() != null) {
-					AccesorioCreado = managerAccesorio.findByNroSerieAccesorio(cabecera.getAcceNroSerie());
-					if (AccesorioCreado == null) {
-						throw new Exception(" Accesorio No encontrado");
-					}
-				}
+			// Método para verificar si se crea el accesorio desde un nuevo equipo
+			if (verificadorNuevoAccesorio) {
 
-			} catch (Exception e) {
-				JSFUtil.crearMensajeERROR(e.getMessage());
-				e.printStackTrace();
+				beanEquipo.ActionAccesorioColocarAEquipo(cabecera);
 			}
 
-			// Método para verificar si se crea el accesorio desde un nuevo equipo
 			if (beanEquipo.getCabecera() == null) {
 				inicializarVaribalesAccesorio();
 			} else {
+				AccesorioCreado = managerAccesorio.findByNroSerieAccesorio(cabecera.getAcceNroSerie());
 				nuevoAccesorio = new Accesorio();
 				nuevoAccesorio.setResponsable(beanEquipo.getCabecera().getResponsable());
 				nuevoAccesorio.setSegDependencia(beanEquipo.getCabecera().getSegDependencia());
@@ -380,6 +392,8 @@ public class BeanAccesorio implements Serializable {
 
 	public String actionSeleccionarAccesorio(Accesorio accesorio) throws Exception {
 		vistaAccesorio = ConsultarAccesorioAtributoEquipo(accesorio);
+		ConsultarVidaUtilofAccessorio(accesorio);
+
 		return "accesorios_vista";
 	}
 
@@ -400,6 +414,7 @@ public class BeanAccesorio implements Serializable {
 	 * @throws Exception
 	 */
 	public Accesorio ConsultarAccesorioAtributoEquipo(Accesorio accesorio) throws Exception {
+
 		Accesorio accesorioConsulta;
 		accesorioConsulta = accesorio;
 		listaAccesorioAtributo = managerAccesorio.findByAcceIdSeleccionadoAtributo(accesorio.getAcceId());
@@ -408,7 +423,29 @@ public class BeanAccesorio implements Serializable {
 		if (equiposDevuelto.size() > 0) {
 			equipoDevuelto = equiposDevuelto.get(0);
 		}
+
 		return accesorioConsulta;
+
+	}
+
+	/**
+	 * Consultar la vida util y el precio depreciado del un accesorio
+	 * 
+	 * @param accesorio
+	 * @throws Exception
+	 */
+	public void ConsultarVidaUtilofAccessorio(Accesorio accesorio) throws Exception {
+		String[] a = new String[2];
+
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		String Date = "31/12/2014";
+		Date datos = format.parse(Date);
+		Timestamp dato = new Timestamp(datos.getTime());
+
+		a = beanBitacora.actionCargarFechaTranscurridos(dato, accesorio.getAccPrecio());
+		vidaUtil = a[0];
+		valorDepreciado = a[1];
 
 	}
 
@@ -587,6 +624,7 @@ public class BeanAccesorio implements Serializable {
 		PrimeFaces current = PrimeFaces.current();
 		if (equiposDevuelto.size() == 0) {
 			current.executeScript("PF('dialogoActivarAccesorio').show()");
+
 		} else {
 			JSFUtil.crearMensajeINFO("El Accesorio ya se encuentra en un Equipo");
 			equiposDevuelto.equals(null);
@@ -618,6 +656,43 @@ public class BeanAccesorio implements Serializable {
 	 */
 	public void actionVistaSeleccionarAccesorio(Accesorio accesorio) throws Exception {
 		vistaAccesorio = ConsultarAccesorioAtributoEquipo(accesorio);
+		idSegDependenciaSeleccionado = vistaAccesorio.getSegDependencia().getIdSegDependencia();
+		respIdSeleccionado = vistaAccesorio.getResponsable().getRespId();
+		beanDependencia.actionConsultarAllDependencias();
+		beanResponsable.actionConsultarAllResponsable();
+
+	}
+
+	// Seleccionar un nuevo Ip a un Equipo
+	public void actionAsignarAEquipo() throws Exception {
+		PrimeFaces current = PrimeFaces.current();
+
+		if (cabecera != null) {
+			current.executeScript("PF('dialogoAsignarAEquipo').show()");
+			verificadorNuevoAccesorio = true;
+		}
+
+	}
+
+	/**
+	 * Accesorio Retorna a la funcionalidad
+	 * 
+	 * @param accesorio
+	 * @throws Exception
+	 */
+
+	public void actionActivarAccesorio(Accesorio accesorio) throws Exception {
+		String enlace = "";
+		accesorio = ConsultarAccesorioAtributoEquipo(accesorio);
+		accesorio.setAcceEstado("Activo");
+		managerAccesorio.actualizarEstadoAccesorio(beanSegLogin.getLoginDTO(), accesorio, "Activo", enlace);
+		beanBodega.actionSelectionEquiposInactivos();
+		beanBodega.actionSelectionAccesoriosInactivos();
+
+		// beanBodega.actionSelectionAccesoriosInactivosCE();
+		// beanAccesorio.actionConsultarListaAccesoriosActivos();
+		// actionRecargarListaEquiposActivos();
+		JSFUtil.crearMensajeWARN("Equipo y Accesorios Activados");
 	}
 
 	/*
@@ -783,6 +858,30 @@ public class BeanAccesorio implements Serializable {
 
 	public void setAccesorioBodega(Accesorio accesorioBodega) {
 		this.accesorioBodega = accesorioBodega;
+	}
+
+	public String getVidaUtil() {
+		return vidaUtil;
+	}
+
+	public void setVidaUtil(String vidaUtil) {
+		this.vidaUtil = vidaUtil;
+	}
+
+	public String getValorDepreciado() {
+		return valorDepreciado;
+	}
+
+	public void setValorDepreciado(String valorDepreciado) {
+		this.valorDepreciado = valorDepreciado;
+	}
+
+	public boolean getVerificadorNuevoAccesorio() {
+		return verificadorNuevoAccesorio;
+	}
+
+	public void setVerificadorNuevoAccesorio(boolean verificadorNuevoAccesorio) {
+		this.verificadorNuevoAccesorio = verificadorNuevoAccesorio;
 	}
 
 }

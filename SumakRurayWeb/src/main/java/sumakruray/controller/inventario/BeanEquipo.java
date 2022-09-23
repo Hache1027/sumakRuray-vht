@@ -2,6 +2,9 @@ package sumakruray.controller.inventario;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -88,6 +91,8 @@ public class BeanEquipo implements Serializable {
 	private BeanMarca beanMarca;
 	@Inject
 	private BeanAtributo beanAtributo;
+	@Inject
+	private BeanBitacora beanBitacora;
 	// Equipos
 	private List<Equipo> listaEquiposActivos;
 	private List<Equipo> listaEquiposInactivos;
@@ -132,6 +137,9 @@ public class BeanEquipo implements Serializable {
 	private int tipAccIdSeleccionado;
 	private String tipoAccion;
 	private int equiIdSeleccionado;
+	private String vidaUtil;
+	private String valorDepreciado;
+	private ArrayList<String> listaAccesorioofEquipoTemporal;
 
 	// Tiempo
 	private Timestamp tiempo;
@@ -381,6 +389,7 @@ public class BeanEquipo implements Serializable {
 						} else {
 							accesorio.setAcceEstado("Activo");
 							System.out.println(accesorio.getAcceNombre() + "--------fff----");
+
 							managerAccesorio.cambiarEstadoAccesorioEnEquipo(beanSegLogin.getLoginDTO(), accesorio,
 									cabecera, "Activo");
 						}
@@ -516,8 +525,8 @@ public class BeanEquipo implements Serializable {
 	 * @throws Exception
 	 */
 	public String actionVistaEquipo(Equipo vistaEquipos) throws Exception {
-		vistaEquipo = new Equipo();
 		vistaEquipo = ActionBuscarAcceAtriOfEquipo(vistaEquipos);
+		ConsultarVidaUtilofEquipo(vistaEquipos);
 		return "equipo_vista";
 	}
 
@@ -529,8 +538,14 @@ public class BeanEquipo implements Serializable {
 	 * @throws Exception
 	 */
 	public void actionfindEquipo(int equiIdSeleccionados) throws Exception {
-
+		listaAccesorioofEquipoTemporal = new ArrayList<String>();
 		equipoDevuelto = ActionBuscarAcceAtriOfEquipo(managerEquipo.findByIdEquipo(equiIdSeleccionados));
+
+		for (int i = 0; i < equipoDevuelto.getEquipoAccesorios().size(); i++) {
+			listaAccesorioofEquipoTemporal
+					.add(equipoDevuelto.getEquipoAccesorios().get(i).getAccesorio().getAcceNroSerie() + "   "
+							+ equipoDevuelto.getEquipoAccesorios().get(i).getAccesorio().getAcceNombre());
+		}
 	}
 
 	/**
@@ -784,8 +799,26 @@ public class BeanEquipo implements Serializable {
 		// accesorio);
 		beanBodega.actionSelectionAccesoriosInactivos();
 		beanAccesorio.ConsultarAccesorioAtributoEquipo(accesorio);
+		beanAccesorio.setIdSegDependenciaSeleccionado(accesorio.getSegDependencia().getIdSegDependencia());
+		beanAccesorio.setRespIdSeleccionado(accesorio.getResponsable().getRespId());
 		beanAccesorio.actionConsultarListaAccesoriosActivos();
 
+	}
+
+	/**
+	 * Colocar un accesorio a un luista de accesorios de un Equipo Temporalmente
+	 * 
+	 * @param accesorio
+	 * @throws Exception
+	 */
+
+	public void ActionAccesorioColocarAEquipoTemporal(Accesorio accesorio, Equipo equipo) throws Exception {
+		listaAccesorioofEquipoTemporal.add(accesorio.getAcceNroSerie() + "   " + accesorio.getAcceNombre());
+
+		beanAccesorio.setIdSegDependenciaSeleccionado(equipo.getSegDependencia().getIdSegDependencia());
+		beanAccesorio.setRespIdSeleccionado(equipo.getResponsable().getRespId());
+
+		JSFUtil.crearMensajeINFO("Accesorio agregado");
 	}
 
 	/**
@@ -834,6 +867,27 @@ public class BeanEquipo implements Serializable {
 		// beanAccesorio.actionConsultarListaAccesoriosActivos();
 		// actionRecargarListaEquiposActivos();
 		JSFUtil.crearMensajeWARN("Equipo y Accesorios Activados");
+	}
+
+	/**
+	 * Consultar la vida util y el precio depreciado del un accesorio
+	 * 
+	 * @param accesorio
+	 * @throws Exception
+	 */
+	public void ConsultarVidaUtilofEquipo(Equipo equipo) throws Exception {
+		String[] a = new String[2];
+
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		String Date = "31/12/2014";
+		Date datos = format.parse(Date);
+		Timestamp dato = new Timestamp(datos.getTime());
+
+		a = beanBitacora.actionCargarFechaTranscurridos(dato, equipo.getEquiValor());
+		vidaUtil = a[0];
+		valorDepreciado = a[1];
+
 	}
 
 	/*
@@ -1120,6 +1174,30 @@ public class BeanEquipo implements Serializable {
 
 	public void setEquipoBodega(Equipo equipoBodega) {
 		this.equipoBodega = equipoBodega;
+	}
+
+	public String getVidaUtil() {
+		return vidaUtil;
+	}
+
+	public void setVidaUtil(String vidaUtil) {
+		this.vidaUtil = vidaUtil;
+	}
+
+	public String getValorDepreciado() {
+		return valorDepreciado;
+	}
+
+	public void setValorDepreciado(String valorDepreciado) {
+		this.valorDepreciado = valorDepreciado;
+	}
+
+	public ArrayList<String> getListaAccesorioofEquipoTemporal() {
+		return listaAccesorioofEquipoTemporal;
+	}
+
+	public void setListaAccesorioofEquipoTemporal(ArrayList<String> listaAccesorioofEquipoTemporal) {
+		this.listaAccesorioofEquipoTemporal = listaAccesorioofEquipoTemporal;
 	}
 
 }

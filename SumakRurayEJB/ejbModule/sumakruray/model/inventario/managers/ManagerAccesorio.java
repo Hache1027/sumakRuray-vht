@@ -1,7 +1,12 @@
 package sumakruray.model.inventario.managers;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -12,6 +17,7 @@ import sumakruray.model.core.entities.Accesorio;
 import sumakruray.model.core.entities.AccesorioAtributo;
 import sumakruray.model.core.entities.Atributo;
 import sumakruray.model.core.entities.Equipo;
+import sumakruray.model.core.entities.ListaIp;
 import sumakruray.model.core.entities.TipoAccesorio;
 import sumakruray.model.core.managers.ManagerDAO;
 import sumakruray.model.seguridades.dtos.LoginDTO;
@@ -114,14 +120,19 @@ public class ManagerAccesorio {
 	 */
 	public void cambiarEstadoAccesorioEnEquipo(LoginDTO loginDTO, Accesorio edicionAccesorio, Equipo equipo,
 			String estado) throws Exception {
+		Accesorio accesorio = (Accesorio) mDAO.findById(Accesorio.class, edicionAccesorio.getAcceId());
 		String enlace = "";
+
 		if (estado.equals("Inactivo_Equipo")) {
-			mDAO.actualizar(edicionAccesorio);
+			accesorio.setAcceEstado(edicionAccesorio.getAcceEstado());
+			accesorio.setSegDependencia(edicionAccesorio.getSegDependencia());
+			accesorio.setResponsable(edicionAccesorio.getResponsable());
+			mDAO.actualizar(accesorio);
 			// Auditoria del los eventos
 			managerBitacora.mostrarLogAccesorio(loginDTO, edicionAccesorio, "AñadirAccesorioAEquipo",
 					"Accesorio añadido al Equipo " + equipo.getEquiNombre() + " de Bodega ");
 		} else if (estado.equals("Activo")) {
-			Accesorio accesorio = (Accesorio) mDAO.findById(Accesorio.class, edicionAccesorio.getAcceId());
+
 			enlace += " <>  Asignado Responsable a : " + edicionAccesorio.getResponsable().getRespApellidos();
 			enlace += " <>  Asignado Dependencia a : " + edicionAccesorio.getSegDependencia().getDepDescripcion();
 			accesorio.setAcceEstado(edicionAccesorio.getAcceEstado());
@@ -178,6 +189,8 @@ public class ManagerAccesorio {
 			cabecera.setAccPrecio(nuevoAccesorio.getAccPrecio());
 			cabecera.setAcceCodBodega(nuevoAccesorio.getAcceCodBodega());
 			cabecera.setAcceFechaCreacion(nuevoAccesorio.getAcceFechaCreacion());
+			cabecera.setAcceGarantia(nuevoAccesorio.getAcceGarantia());
+			cabecera.setAcceAnoVidaUtil(nuevoAccesorio.getAcceAnoVidaUtil());
 			cabecera.setAcceUsuarioCrea(nuevoAccesorio.getAcceUsuarioCrea());
 			cabecera.setAcceEstado(nuevoAccesorio.getAcceEstado());
 			cabecera.setSegDependencia(nuevoAccesorio.getSegDependencia());
@@ -313,6 +326,14 @@ public class ManagerAccesorio {
 					" Accesorio en Mantenimiento por: " + Observación);
 
 		}
+
+	}
+
+	/**
+	 * Consultarel ultimo registro de un accesorio
+	 */
+	public int ConsultarUltimoAcceidofAccesorio() throws Exception {
+		return (int) mDAO.obtenerValorMax(Accesorio.class, "acceId");
 
 	}
 

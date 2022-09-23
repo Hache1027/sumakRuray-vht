@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -31,13 +32,21 @@ public class BeanBitacora implements Serializable {
 	private List<BitacoraEquipo> listaBitacoraEquipo;
 	private int acceIdSeleccionado;
 	private int equiIdSeleccionado;
+	// Tiempo
+	private Timestamp tiempo;
 
+	//
 	public BeanBitacora() {
 		// TODO Auto-generated constructor stub
 	}
 
 	private Date fechaInicio;
 	private Date fechaFin;
+
+	@PostConstruct
+	public void inicializar() throws Exception {
+		tiempo = new Timestamp(System.currentTimeMillis());
+	}
 
 	public String actionCargarMenuBitacoraAccesorio() {
 		// obtener la fecha de ayer:
@@ -60,6 +69,10 @@ public class BeanBitacora implements Serializable {
 		JSFUtil.crearMensajeINFO("Registros encontrados: " + listaBitacoraEquipo.size());
 		beanEquipo.actionRecargarListaEquiposAll();
 		return "bitacoraEquipo";
+	}
+
+	public String[] actionCargarFechaTranscurridos(Timestamp fechaAdquisicion, double precio) throws Exception {
+		return managerBitacora.CalcularFechaEntreFechas(fechaAdquisicion, tiempo, precio);
 	}
 
 	public void actionListenerConsultarBitacoraAccesorio() {
