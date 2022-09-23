@@ -47,6 +47,7 @@
 			<p:dataTable value="#{beanBodega.listaAccesorioBodegas}"
 				var="AccesorioBodega" paginator="true" rows="5">
 
+
 				<p:column headerText="ACCESORIO"
 					filterBy="#{AccesorioBodega.acceNombre}" filterMatchMode="contains">
 					<h:outputText value="#{AccesorioBodega.acceNombre}" />
@@ -103,6 +104,12 @@
 					<!-- ________________________splitter 1 _______________________________________ -->
 					<p:splitterPanel>
 						<p>
+							<p:commandButton value="ACTIVAR SIN EQUIPO" icon="pi pi-save"
+								styleClass="rounded-button ui-button-help"
+								action="#{beanAccesorio.actionActivarAccesorio(beanAccesorio.vistaAccesorio)}"
+								update="@form" />
+						</p>
+						<p>
 
 							<p:panelGrid columns="6">
 								<h:outputText value="NOMBRE:" />
@@ -115,18 +122,37 @@
 									value="#{beanAccesorio.vistaAccesorio.acceCodBodega}" />
 								<h:outputText value="PRECIO:" />
 								<h:outputText value="#{beanAccesorio.vistaAccesorio.accPrecio}" />
-								<h:outputText value="RESPONSABLE" />
-								<h:outputText
-									value="#{beanAccesorio.vistaAccesorio.responsable.respNombres} #{beanAccesorio.vistaAccesorio.responsable.respApellidos}" />
 								<h:outputText value="PROVEEDOR" />
 								<h:outputText
 									value="#{beanAccesorio.vistaAccesorio.proveedor.proEmpresa} " />
 								<h:outputText value="MARCA" />
 								<h:outputText
 									value="#{beanAccesorio.vistaAccesorio.marca.marDescripcion} " />
+
 								<h:outputText value="DEPENDENCIA" />
-								<h:outputText
-									value="#{beanAccesorio.vistaAccesorio.segDependencia.depDescripcion} " />
+								<p:selectOneMenu filterMatchMode="contains" filter="true"
+									value="#{beanAccesorio.idSegDependenciaSeleccionado}"
+									id="listaDependencia">
+									<f:selectItem itemLabel="Seleccione una Depedencia..."
+										noSelectionOption="true" />
+									<f:selectItems value="#{beanDependencia.listaDependencias}"
+										var="u" itemLabel=" #{u.depDescripcion}"
+										itemValue="#{u.idSegDependencia}">
+									</f:selectItems>
+
+								</p:selectOneMenu>
+								<h:outputText value="RESPONSABLE" />
+								<p:selectOneMenu filterMatchMode="contains" filter="true"
+									value="#{beanAccesorio.respIdSeleccionado}"
+									id="listaResponsable">
+									<f:selectItem itemLabel="Seleccione un responsable.."
+										noSelectionOption="true" />
+									<f:selectItems value="#{beanResponsable.listaResponsables}"
+										var="u" itemLabel=" #{u.respNombres } #{u.respApellidos }"
+										itemValue="#{u.respId}"></f:selectItems>
+								</p:selectOneMenu>
+
+
 
 							</p:panelGrid>
 						</p>
@@ -193,7 +219,7 @@
 
 								<p:commandButton value="COLOCAR" icon="pi pi-download"
 									actionListener="#{beanEquipo.ActionAccesorioColocarAEquipo(beanAccesorio.vistaAccesorio)}"
-									update="@form,:lista2,:lista3:EquipoQuePertenece"
+									update="@form,:lista2,:lista3"
 									styleClass=" ui-button-help ">
 								</p:commandButton>
 							</p:panelGrid>

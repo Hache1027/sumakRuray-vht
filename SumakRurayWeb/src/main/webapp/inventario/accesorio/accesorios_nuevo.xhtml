@@ -24,10 +24,6 @@
 				action="/menu?faces-redirect=true" />
 			<p:menuitem value="Regresar" icon="pi pi-arrow-circle-left"
 				action="#{beanAccesorio.actionRegresar('menu')}" />
-			<p:menuitem value="Atributos" icon="pi pi-plus"
-				title="Nuevo Atributo"
-				action="#{beanAtributo.actionNuevoAtributos()}"
-				oncomplete="PF('dialogoCrearAtributo').show()" />
 			<p:menuitem value="Responsable" icon="pi pi-plus"
 				title="Nuevo Responsable"
 				action="#{beanResponsable.actionNuevoResponsable()}"
@@ -86,10 +82,10 @@
 							stepFactor="0.01" required="true" style=" width:150px" />
 						<h:outputText value="GARANTIA :" />
 						<p:spinner value="#{beanAccesorio.nuevoAccesorio.acceGarantia}"
-							stepFactor="1" required="true" style=" width:100px" />
+							required="true" style=" width:100px" />
 						<h:outputText value="AÑOS UTIL :" />
 						<p:spinner value="#{beanAccesorio.nuevoAccesorio.acceAnoVidaUtil}"
-							 required="true" style=" width:100px" />
+							required="true" style=" width:100px" />
 
 
 						<h:outputText value="PROVEEDOR" />
@@ -110,10 +106,33 @@
 							<f:selectItems value="#{beanMarca.listaMarcas}" var="u"
 								itemLabel=" #{u.marDescripcion}" itemValue="#{u.marId}"></f:selectItems>
 						</p:selectOneMenu>
+
+					</p:panelGrid>
+					<br />
+					<p>
+						<b><h:outputText value="EQUIPO QUE PERTENECE" /></b>
+					</p>
+					<p>
+						<p:panelGrid columns="5" id="EquipoQuePertenece">
+							<h:outputText value="NOMBRE" />
+							<h:outputText value="#{beanEquipo.equipoDevuelto.equiNombre}   " />
+							<h:outputText value="NRO. SERIE " />
+							<h:outputText value=" #{beanEquipo.equipoDevuelto.equiNroSerie} " />
+							<p:commandButton value="AIGNAR A UN  EQUIPO"
+								icon="pi pi-download" update="@form"
+								styleClass=" ui-button-help "
+								actionListener="#{beanAccesorio.actionListenerAdicionarAtributo('SinAtributo')}"
+								action="#{beanAccesorio.actionAsignarAEquipo()}">
+							</p:commandButton>
+						</p:panelGrid>
+
+					</p>
+
+					<br />
+					<p:panelGrid columns="6">
 						<h:outputText value="DEPENDENCIA" />
 						<p:selectOneMenu filterMatchMode="contains" filter="true"
 							value="#{beanAccesorio.idSegDependenciaSeleccionado}"
-							required="true" requiredMessage="Ingrese una Dependencia"
 							id="listaDependencia">
 							<f:selectItem itemLabel="Seleccione una Depedencia..."
 								noSelectionOption="true" />
@@ -121,11 +140,11 @@
 								var="u" itemLabel=" #{u.depDescripcion}"
 								itemValue="#{u.idSegDependencia}">
 							</f:selectItems>
+
 						</p:selectOneMenu>
 						<h:outputText value="RESPONSABLE" />
 						<p:selectOneMenu filterMatchMode="contains" filter="true"
-							value="#{beanAccesorio.respIdSeleccionado}" required="true"
-							requiredMessage="Ingrese un Responsable" id="listaResponsable">
+							value="#{beanAccesorio.respIdSeleccionado}" id="listaResponsable">
 							<f:selectItem itemLabel="Seleccione un responsable.."
 								noSelectionOption="true" />
 							<f:selectItems value="#{beanResponsable.listaResponsables}"
@@ -134,8 +153,11 @@
 						</p:selectOneMenu>
 
 					</p:panelGrid>
+					<br />
+					<br />
 
 				</p:splitterPanel>
+				<!-- ____________________________Splitter 2________________________________ -->
 				<p:splitterPanel
 					styleClass="flex align-items-center justify-content-center"
 					minSize="25">
@@ -163,7 +185,7 @@
 
 
 						<p:commandButton title="Carrito" icon="pi pi-plus"
-							actionListener="#{beanAccesorio.actionListenerAdicionarAtributo()}"
+							actionListener="#{beanAccesorio.actionListenerAdicionarAtributo('Atributo')}"
 							update="@form" styleClass="rounded-button ui-button-help" />
 					</p:panelGrid>
 					<p:dataTable value="#{beanAccesorio.cabecera.accesorioAtributos}"
@@ -300,6 +322,112 @@
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>
+
+	<!-- ________________________VENTANA PRINCIPAL CREAR ACCESORIOS _______________________________________ -->
+
+	<p:dialog header="Asignar a un Equipo"
+		widgetVar="dialogoAsignarAEquipo">
+		<h:form id="lista4">
+			<div align="center">
+				<p:splitter style="height: auto; width:auto" styleClass="mb-5">
+					<!-- ________________________splitter 1 _______________________________________ -->
+
+
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						size="50" minSize="50">
+						<p>
+							<p:panelGrid columns="4">
+								<h:outputText value="EQUIPO" />
+								<p:selectOneMenu filterMatchMode="contains" filter="true"
+									value="#{beanEquipo.equiIdSeleccionado}" style="width:300px">
+									<f:selectItem itemLabel="Seleccione una Equipo..."
+										noSelectionOption="true" />
+									<f:selectItems value="#{beanEquipo.listaEquiposActivos}"
+										var="u" itemLabel=" #{u.equiNroSerie} #{u.equiNombre}"
+										itemValue="#{u.equiId}"></f:selectItems>
+
+								</p:selectOneMenu>
+								<p:commandButton title="Buscar Equipo" icon="pi pi-search"
+									actionListener="#{beanEquipo.actionfindEquipo(beanEquipo.equiIdSeleccionado)}"
+									update="@form" styleClass="rounded-button ui-button-help" />
+
+								<p:commandButton value="COLOCAR" icon="pi pi-download"
+									actionListener="#{beanEquipo.ActionAccesorioColocarAEquipoTemporal(beanAccesorio.cabecera,beanEquipo.equipoDevuelto)}"
+									update="@form,:lista3:listaDependencia,:lista3:listaResponsable,:lista3:EquipoQuePertenece"
+									styleClass=" ui-button-help ">
+								</p:commandButton>
+							</p:panelGrid>
+						</p>
+						<p>
+							<b><h:outputText value="INFORMACIÓN DEL EQUIPO" /></b>
+						</p>
+
+
+						<p>
+							<p:panelGrid columns="4">
+
+								<h:outputText value="NOMBRE" />
+								<h:outputText value="#{beanEquipo.equipoDevuelto.equiNombre}" />
+								<h:outputText value="NRO. SERIE" />
+								<h:outputText value="#{beanEquipo.equipoDevuelto.equiNroSerie}" />
+								<h:outputText value="PROVEEDOR" />
+								<h:outputText
+									value="#{beanEquipo.equipoDevuelto.proveedor.proEmpresa}" />
+
+								<h:outputText value="RESPOSABLE" />
+								<h:outputText
+									value="#{beanEquipo.equipoDevuelto.responsable.respNombres}" />
+
+								<h:outputText value="DEPENDENCIA" />
+								<h:outputText
+									value="#{beanEquipo.equipoDevuelto.segDependencia.depDescripcion}" />
+
+								<h:outputText value="GARANTIA" />
+								<h:outputText value="#{beanEquipo.equipoDevuelto.equiGarantia}" />
+								<h:outputText value="PRECIO" />
+								<h:outputText value="#{beanEquipo.equipoDevuelto.equiValor}" />
+							</p:panelGrid>
+						</p>
+
+					</p:splitterPanel>
+					<!-- ________________________splitter 2 _______________________________________ -->
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						size="15">
+						<br />
+						<b><h:outputText value="ACCESORIOS" /></b>
+						<p:dataTable value="#{beanEquipo.listaAccesorioofEquipoTemporal}"
+							var="EquipoAccesorios" style="width:300px">
+							<p:column headerText="NRO. SERIE - NOMBRE" style="width:50px">
+								<h:outputText value="#{EquipoAccesorios}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:splitterPanel>
+					<!-- ________________________splitter 3 _______________________________________ -->
+					<p:splitterPanel
+						styleClass="flex align-items-center justify-content-center"
+						size="15">
+						<br />
+						<b><h:outputText value="CARACTERISTICAS" /></b>
+						<p:dataTable value="#{beanEquipo.equipoDevuelto.equipoAtributos}"
+							var="EquipoAtributos" style="width:300px">
+							<p:column headerText="NOMBRE" style="width:50px">
+								<h:outputText value="#{EquipoAtributos.atributo.atriNombre}" />
+							</p:column>
+							<p:column headerText="VALOR" style="width:50px">
+								<h:outputText value="#{EquipoAtributos.atriDescripcion}" />
+							</p:column>
+						</p:dataTable>
+					</p:splitterPanel>
+				</p:splitter>
+			</div>
+		</h:form>
+
+	</p:dialog>
+
 
 
 </body>

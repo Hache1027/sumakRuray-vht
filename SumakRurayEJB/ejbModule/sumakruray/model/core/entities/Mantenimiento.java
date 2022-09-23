@@ -5,67 +5,66 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-
 /**
  * The persistent class for the mantenimiento database table.
  * 
  */
 @Entity
-@Table(name="mantenimiento")
-@NamedQuery(name="Mantenimiento.findAll", query="SELECT m FROM Mantenimiento m")
+@Table(name = "mantenimiento")
+@NamedQuery(name = "Mantenimiento.findAll", query = "SELECT m FROM Mantenimiento m")
 public class Mantenimiento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="man_id", unique=true, nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "man_id", unique = true, nullable = false)
 	private Integer manId;
 
-	@Column(name="man_descripcion", length=500)
+	@Column(name = "man_descripcion", length = 500)
 	private String manDescripcion;
 
-	@Column(name="man_diagnostico", length=100)
+	@Column(name = "man_diagnostico", length = 100)
 	private String manDiagnostico;
 
-	@Column(name="man_estado", length=50)
+	@Column(name = "man_estado", length = 50)
 	private String manEstado;
 
-	@Column(name="man_fecha_creacion")
+	@Column(name = "man_fecha_creacion")
 	private Timestamp manFechaCreacion;
 
-	@Column(name="man_fecha_modificacion")
+	@Column(name = "man_fecha_modificacion")
 	private Timestamp manFechaModificacion;
 
-	@Column(name="man_funcionario", length=100)
+	@Column(name = "man_funcionario", length = 100)
 	private String manFuncionario;
 
-	@Column(name="man_funcionario_entrega", length=100)
+	@Column(name = "man_funcionario_entrega", length = 100)
 	private String manFuncionarioEntrega;
 
-	@Column(name="man_funcionario_recibe", length=100)
+	@Column(name = "man_funcionario_recibe", length = 100)
 	private String manFuncionarioRecibe;
 
-	@Column(name="man_tipo_int_ext", length=100)
+	@Column(name = "man_tipo_int_ext", length = 100)
 	private String manTipoIntExt;
 
-	@Column(name="man_tipo_pre_corr", length=100)
+	@Column(name = "man_tipo_pre_corr", length = 100)
 	private String manTipoPreCorr;
 
-	@Column(name="man_usuario_crea", length=100)
+	@Column(name = "man_usuario_crea", length = 100)
 	private String manUsuarioCrea;
 
-	@Column(name="man_usuario_modifica", length=100)
+	@Column(name = "man_usuario_modifica", length = 100)
 	private String manUsuarioModifica;
 
-	@Column(name="man_usuario_recibe", length=100)
+	@Column(name = "man_usuario_recibe", length = 100)
 	private String manUsuarioRecibe;
 
 	//bi-directional many-to-one association to AccesorioMantenimiento
 	@OneToMany(mappedBy="mantenimiento", cascade = CascadeType.ALL)
 	private List<AccesorioMantenimiento> accesorioMantenimientos;
 
-	//bi-directional many-to-one association to EquipoMantenimiento
-	@OneToMany(mappedBy="mantenimiento", cascade = CascadeType.ALL)
+	// bi-directional many-to-one association to EquipoMantenimiento
+	@OneToMany(mappedBy = "mantenimiento", cascade = CascadeType.ALL)
 	private List<EquipoMantenimiento> equipoMantenimientos;
 
 	public Mantenimiento() {

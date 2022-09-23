@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -59,6 +60,7 @@ public class BeanBitacora implements Serializable {
 	private List<BitacoraEquipo> listaBitacoraEquipo;
 	private int acceIdSeleccionado;
 	private int equiIdSeleccionado;
+
 	
 	// ------------------- HACHE --------------
 	
@@ -74,7 +76,12 @@ public class BeanBitacora implements Serializable {
 		private List<AccesorioAtributo> listAccesorioAtributoValor;
 		private List<EquipoAtributo> listEquipoAtributo;
 		private List<EquipoAtributo> listEquipoAtributoValor;
+		
+	// Tiempo
+	private Timestamp tiempo;
 
+
+	//
 	public BeanBitacora() {
 		// TODO Auto-generated constructor stub
 	}
@@ -82,7 +89,13 @@ public class BeanBitacora implements Serializable {
 	private Date fechaInicio;
 	private Date fechaFin;
 
+	@PostConstruct
+	public void inicializar() throws Exception {
+		tiempo = new Timestamp(System.currentTimeMillis());
+	}
+
 	public String actionCargarMenuBitacoraAccesorio() throws Exception {
+
 		// obtener la fecha de ayer:
 		fechaInicio = ModelUtil.addDays(new Date(), -1);
 		// obtener la fecha de hoy:
@@ -105,6 +118,10 @@ public class BeanBitacora implements Serializable {
 		JSFUtil.crearMensajeINFO("Registros encontrados: " + listaBitacoraEquipo.size());
 		beanEquipo.actionRecargarListaEquiposAll();
 		return "bitacoraEquipo";
+	}
+
+	public String[] actionCargarFechaTranscurridos(Timestamp fechaAdquisicion, double precio) throws Exception {
+		return managerBitacora.CalcularFechaEntreFechas(fechaAdquisicion, tiempo, precio);
 	}
 
 	public void actionListenerConsultarBitacoraAccesorio() {

@@ -81,6 +81,7 @@ public class ManagerEquipo {
 			cabecera.setProveedor(nuevoEquipo.getProveedor());
 			cabecera.setSegDependencia(nuevoEquipo.getSegDependencia());
 			cabecera.setEquiGarantia(nuevoEquipo.getEquiGarantia());
+			cabecera.setEquiAnoVidaUtil(nuevoEquipo.getEquiAnoVidaUtil());
 			cabecera.setTipoEquipo(nuevoEquipo.getTipoEquipo());
 			cabecera.setResponsable(nuevoEquipo.getResponsable());
 			cabecera.setMarca(nuevoEquipo.getMarca());

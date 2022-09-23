@@ -235,6 +235,7 @@ public class BeanMantenimiento implements Serializable {
 
 			// Cambiar el estado de Equipo
 			equipoDevuelto.setEquiEstado("Mantenimiento");
+			nuevoMantenimiento.setManFuncionario(equipoDevuelto.getResponsable().getRespNombres()+" "+equipoDevuelto.getResponsable().getRespApellidos());
 			enlace += nuevoMantenimiento.getManDescripcion();
 			enlace += " de tipo : " + nuevoMantenimiento.getManTipoIntExt() + " y "
 					+ nuevoMantenimiento.getManTipoPreCorr();

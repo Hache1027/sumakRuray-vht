@@ -88,13 +88,14 @@
 						<h:outputText
 							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manFuncionarioEntrega}" />
 
-						<h:outputText value=" FUNCIONARIO QUE RECIBE o EMPRESA" />
-						<h:outputText
-							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manFuncionarioRecibe}" />
+						
 
 						<h:outputText value="USUARIO QUE RECIBE (RETORNO)" />
 						<p:inputText
 							value="#{beanMantenimiento.edicionEquipoMantenimiento.mantenimiento.manUsuarioRecibe}" />
+						<h:outputText value=" FUNCIONARIO/EMPRESA QUE ENTREGA" />
+						<p:inputText
+							value="#{beanMantenimiento.nuevoMantenimiento.manFuncionarioEntrega}" />
 					</p:panelGrid>
 
 					<br />
