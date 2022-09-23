@@ -417,6 +417,39 @@ public class BeanMantenimiento implements Serializable {
 		return "";
 	}
 	
+	// Reporte en Jasper de Equipo Mantenimiento
+			public String actionReporteEquipo(int manID) {
+				Map<String, Object> parametros = new HashMap<String, Object>();
+				/*
+				 * parametros.put("p_titulo_principal",p_titulo_principal);
+				 * parametros.put("p_titulo",p_titulo);
+				 */ FacesContext context = FacesContext.getCurrentInstance();
+				ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+				String ruta = servletContext.getRealPath("resources/jasper/reporteEquipo/ReporteEquipoFinal.jasper");
+				HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+				response.addHeader("Content-disposition", "attachment;filename=reporteEquipo.pdf");
+				response.setContentType("application/pdf");
+				parametros.put("man_ID", manID);
+				try {
+					Class.forName("org.postgresql.Driver");
+					System.out.println("Driver");
+					Connection connection = null;
+					connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sumakruray2", "postgres",
+							"vicoc123");
+					JasperPrint impresion = JasperFillManager.fillReport(ruta, parametros, connection);
+					JasperExportManager.exportReportToPdfStream(impresion, response.getOutputStream());
+					context.getApplication().getStateManager().saveView(context);
+					System.out.println("Reporte de Equipo Generado Correctamente.");
+					context.responseComplete();
+				} catch (Exception e) {
+					JSFUtil.crearMensajeERROR(e.getMessage());
+					e.printStackTrace();
+				}
+				return "";
+			}
+	
+	
+	
 	// ----------------------------------------------------------- HACHE ----------------------------------------
 
 	// Accion actualizar AccesorioMantenimiento

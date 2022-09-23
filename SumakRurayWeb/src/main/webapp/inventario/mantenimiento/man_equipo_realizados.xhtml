@@ -90,9 +90,9 @@
 					<p:commandButton icon="pi pi-eye" title="Observar"
 						styleClass="ui-button-warning"
 						action="#{beanMantenimiento.actionVistaEquipoMantenimiento(equipoMantenimiento)}" />
-					<p:commandButton icon="pi pi-eye" title="Observar"
-						styleClass="ui-button-warning"
-						action="#{beanMantenimiento.actionVistaEquipoMantenimiento(equipoMantenimiento)}" />
+					<p:commandButton icon="pi pi-book" title="Generar Reporte"
+						ajax="false" styleClass="ui-button-help"
+						action="#{beanMantenimiento.actionReporteEquipo(equipoMantenimiento.mantenimiento.manId)}" />
 				</p:column>
 			</p:dataTable>
 		</h:form>
