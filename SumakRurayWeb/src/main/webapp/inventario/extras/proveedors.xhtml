@@ -115,7 +115,7 @@
 		</h:form>
 	</p:dialog>
 
-	<p:dialog header="Crear Proveedor" widgetVar="dialogoCrearProveedor">
+	<p:dialog header="Crear Proveedor" widgetVar="dialogoCrearProveedor" modal="true">
 		<h:form id="formCrearProveedor">
 
 			<p:panelGrid columns="2" layout="grid">
@@ -133,7 +133,7 @@
 					required="true" requiredMessage="Ingrese la Dirección" />
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanProveedor.actionListenerInsertarNuevoProveedor()}"
-					update="listaProveedor"></p:commandButton>
+					update="listaProveedor" oncomplete="PF('dialogoCrearProveedor').hide()"></p:commandButton>
 			</p:panelGrid>
 
 

@@ -412,7 +412,7 @@
 	<!-- ________________________VENTANA EMERGENTE CREAR RESPOSABLE _______________________________________ -->
 
 	<p:dialog header="Crear Responsable"
-		widgetVar="dialogoCrearResponsable">
+		widgetVar="dialogoCrearResponsable" modal="true">
 		<h:form id="formCrearResponsable">
 			<p:panelGrid columns="4">
 				<h:outputText value="Identificación:" />
@@ -443,14 +443,14 @@
 
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanResponsable.actionListenerInsertarNuevoResponsable()}"
-					update="@form,:lista3:listaResponsable"></p:commandButton>
+					update="@form,:lista3:listaResponsable" oncomplete="PF('dialogoCrearResponsable').show()"></p:commandButton>
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>
 	<!-- ________________________VENTANA EMERGENTE CREAR PROVEEDOR _______________________________________ -->
 
-	<p:dialog header="Crear Proveedor" widgetVar="dialogoCrearProveedor">
-		<h:form id="formCrearProveedor">
+	<p:dialog header="Crear Proveedor" widgetVar="dialogoCrearProveedor" modal="true">
+		<h:form id="formCrearProveedor" >
 			<p:panelGrid columns="2">
 				<h:outputText value="Empresa:" />
 				<p:inputText value="#{beanProveedor.nuevoProveedor.proEmpresa}"
@@ -468,14 +468,14 @@
 
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanProveedor.actionListenerInsertarNuevoProveedor()}"
-					update="@form,:lista3:listaProveedor,:lista2:listaProveedor2"></p:commandButton>
+					update="@form,:lista3:listaProveedor,:lista2:listaProveedor2" oncomplete="PF('dialogoCrearProveedor').hide()"></p:commandButton>
 
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>
 	<!-- ________________________VENTANA EMERGENTE CREAR ATRIBUTO _______________________________________ -->
 
-	<p:dialog header="Crear Atributo" widgetVar="dialogoCrearAtributo">
+	<p:dialog header="Crear Atributo" widgetVar="dialogoCrearAtributo" modal="true">
 		<h:form id="formCrearAtributo">
 			<p:panelGrid columns="2">
 				<h:outputText value="Descripción:" />
@@ -483,7 +483,7 @@
 					required="true" requiredMessage="Ingrese el nombre del atributo" />
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanAtributo.actionListenerInsertarNuevoAtributo()}"
-					update="@form,:lista3:listaAtributo,:lista2:listaAtributo"></p:commandButton>
+					update="@form,:lista3:listaAtributo,:lista2:listaAtributo" oncomplete="PF('dialogoCrearAtributo').hide()"></p:commandButton>
 
 			</p:panelGrid>
 		</h:form>
@@ -491,7 +491,7 @@
 
 	<!-- ________________________VENTANA EMERGENTE CREAR TIPO MARCA _______________________________________ -->
 
-	<p:dialog header="Crear tipo Marca" widgetVar="dialogoCrearTipoMarca">
+	<p:dialog header="Crear tipo Marca" widgetVar="dialogoCrearTipoMarca" modal="true">
 		<h:form id="formCrearTipoMarca">
 			<p:panelGrid columns="2">
 				<h:outputText value="Descripción:" />
@@ -499,14 +499,14 @@
 					required="true" requiredMessage="Ingrese la Marca" />
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanMarca.actionListenerInsertarNuevoMarca()}"
-					update="@form,:lista3:listaMarca,:lista2:listaMarca2"></p:commandButton>
+					update="@form,:lista3:listaMarca,:lista2:listaMarca2" oncomplete="PF('dialogoCrearTipoMarca').hide()"></p:commandButton>
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>
 	<!-- ________________________VENTANA EMERGENTE CREAR DEPENDENCIA _______________________________________ -->
 
 	<p:dialog header="Crear Dependencia"
-		widgetVar="dialogoCrearDependencia">
+		widgetVar="dialogoCrearDependencia" modal="true">
 		<h:form id="formCrearDependencia">
 			<p:panelGrid columns="2">
 				<h:outputText value="Descripción:" />
@@ -515,13 +515,13 @@
 					required="true" requiredMessage="Ingrese la Dependencia" />
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanDependencia.actionListenerInsertarNuevoSegDependencia()}"
-					update="@form,:lista3:listaDependencia"></p:commandButton>
+					update="@form,:lista3:listaDependencia" oncomplete="PF('dialogoCrearDependencia').hide()"></p:commandButton>
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>
 	<!-- ________________________VENTANA EMERGENTE CREAR TIPO ACCESORIO _______________________________________ -->
 	<p:dialog header="Crear Tipo Accesorio"
-		widgetVar="dialogoCrearTipoAccesorio">
+		widgetVar="dialogoCrearTipoAccesorio" modal="true">
 		<h:form id="formCrearTipoAccesorio">
 			<p:panelGrid columns="2">
 				<h:outputText value="Accesorio:" />
@@ -532,7 +532,7 @@
 
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanTipoAccesorio.actionListenerInsertarNuevoTipoAccesorio()}"
-					update="@form,:lista2:listaTipoAccesorio"></p:commandButton>
+					update="@form,:lista2:listaTipoAccesorio" oncomplete="PF('dialogoCrearTipoAccesorio').hide()"></p:commandButton>
 
 			</p:panelGrid>
 		</h:form>
