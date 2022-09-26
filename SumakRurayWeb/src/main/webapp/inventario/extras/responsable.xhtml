@@ -131,7 +131,7 @@
 	</p:dialog>
 
 	<p:dialog header="Crear Responsable"
-		widgetVar="dialogoCrearResponsable">
+		widgetVar="dialogoCrearResponsable" modal="true">
 		<h:form id="formCrearResponsable">
 
 			<p:panelGrid columns="2" layout="grid">
@@ -167,7 +167,7 @@
 
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanResponsable.actionListenerInsertarNuevoResponsable()}"
-					update="listaResponsable"></p:commandButton>
+					update="listaResponsable" oncomplete="PF('dialogoCrearResponsable').hide()"></p:commandButton>
 			</p:panelGrid>
 
 

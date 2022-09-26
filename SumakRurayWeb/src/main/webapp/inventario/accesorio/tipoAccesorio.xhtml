@@ -63,7 +63,7 @@
 	</div>
 
 	<p:dialog header="Crear Tipo Accesorio"
-		widgetVar="dialogoCrearTipoAccesorio">
+		widgetVar="dialogoCrearTipoAccesorio" modal="true">
 		<h:form id="formCrearTipoAccesorio">
 			<p:panelGrid columns="2">
 				<h:outputText value="Accesorio:" />
@@ -74,7 +74,7 @@
 
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanTipoAccesorio.actionListenerInsertarNuevoTipoAccesorio()}"
-					update="@form,:lista"></p:commandButton>
+					update="@form,:lista" oncomplete="PF('dialogoCrearTipoAccesorio').hide()"></p:commandButton>
 
 			</p:panelGrid>
 		</h:form>

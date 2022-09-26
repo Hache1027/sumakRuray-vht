@@ -99,7 +99,7 @@
 		</h:form>
 	</p:dialog>
 	<p:dialog header="Crear Dependencia"
-		widgetVar="dialogoCrearDependencia">
+		widgetVar="dialogoCrearDependencia" modal="true">
 		<h:form id="formCrearDependencia">
 			<p:panelGrid columns="2">
 				<h:outputText value="Descripción:" />
@@ -108,7 +108,7 @@
 					required="true" requiredMessage="Ingrese una Dependencia" />
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanDependencia.actionListenerInsertarNuevoSegDependencia()}"
-					update="listaDependencia"></p:commandButton>
+					update="listaDependencia" oncomplete="PF('dialogoCrearDependencia').hide()"></p:commandButton>
 			</p:panelGrid>
 		</h:form>
 	</p:dialog>

@@ -242,7 +242,7 @@
 	</p:dialog>
 	<!-- ________________________VENTANA EMERGENTE CREAR ATRIBUTO _______________________________________ -->
 
-	<p:dialog header="Crear Atributo" widgetVar="dialogoCrearAtributo">
+	<p:dialog header="Crear Atributo" widgetVar="dialogoCrearAtributo" modal="true">
 		<h:form id="formCrearAtributo">
 			<p:panelGrid columns="2">
 				<h:outputText value="Descripción:" />
@@ -250,7 +250,7 @@
 					required="true" requiredMessage="Ingrese el nombre del atributo" />
 				<p:commandButton value="Guardar" icon="pi pi-save"
 					actionListener="#{beanAtributo.actionListenerInsertarNuevoAtributo()}"
-					update="@form,:lista3:listaAtributos"></p:commandButton>
+					update="@form,:lista3:listaAtributos" oncomplete="PF('dialogoCrearAtributo').hide()"></p:commandButton>
 
 			</p:panelGrid>
 		</h:form>
