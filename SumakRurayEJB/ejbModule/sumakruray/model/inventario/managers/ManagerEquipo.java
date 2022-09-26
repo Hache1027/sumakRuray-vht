@@ -367,6 +367,10 @@ public class ManagerEquipo {
 			managerBitacora.mostrarLogEquipo(loginDTO, equipo, "MantenimientoEquipo",
 					" Equipo en Mantenimiento por:  " + observacion);
 			mDAO.actualizar(equipo);
+		} else if (estado.equals("De Baja")) {
+			managerBitacora.mostrarLogEquipo(loginDTO, equipo, "BodegaEquipo",
+					" Dado de Baja al Equipo:  " + equipo.getEquiNombre() + " " + equipo.getEquiNroSerie());
+			mDAO.actualizar(equipo);
 		}
 
 	}
@@ -379,9 +383,10 @@ public class ManagerEquipo {
 	}
 
 	// *********************************EquipoS*********************************************************************************************
-	
-	// CAMBIOS REALIZADOS HACHE -------------------------------------------------------
-	
+
+	// CAMBIOS REALIZADOS HACHE
+	// -------------------------------------------------------
+
 	/**
 	 * Consulta de registros de un Equipo y sus Atributos por su atributo y valor
 	 */
@@ -389,20 +394,20 @@ public class ManagerEquipo {
 		return mDAO.findWhere(EquipoAtributo.class, "atri_id=" + atriId + " and atri_descripcion='" + valor + "'",
 				null);
 	}
-	
-	public List<EquipoAtributo> findAtributosValorEquipo(String atriNombre) {
-		//	String consulta1 = "select ea from EquipoAtributo  ea, Atributo a where a.atriId = ea.atributo.atriId "
-			//		+ "and a.atriNombre = '" + atriNombre + "'";
-			
-			String consulta1 = "select ea from EquipoAtributo ea where ea.equiAtriId = (select max(aaa.equiAtriId) from EquipoAtributo aaa inner "
-					+ "join Atributo a on aaa.atributo.atriId = a.atriId where a.atriNombre = '" + atriNombre + "')";
 
-			
-			Query q = mDAO.getEntityManager().createQuery(consulta1, EquipoAtributo.class);
-			return q.getResultList();
-		}
-	
-	// ----------------------------------------------------- HACHE ---------------------------------------------------
-	
+	public List<EquipoAtributo> findAtributosValorEquipo(String atriNombre) {
+		// String consulta1 = "select ea from EquipoAtributo ea, Atributo a where
+		// a.atriId = ea.atributo.atriId "
+		// + "and a.atriNombre = '" + atriNombre + "'";
+
+		String consulta1 = "select ea from EquipoAtributo ea where ea.equiAtriId = (select max(aaa.equiAtriId) from EquipoAtributo aaa inner "
+				+ "join Atributo a on aaa.atributo.atriId = a.atriId where a.atriNombre = '" + atriNombre + "')";
+
+		Query q = mDAO.getEntityManager().createQuery(consulta1, EquipoAtributo.class);
+		return q.getResultList();
+	}
+
+	// ----------------------------------------------------- HACHE
+	// ---------------------------------------------------
 
 }

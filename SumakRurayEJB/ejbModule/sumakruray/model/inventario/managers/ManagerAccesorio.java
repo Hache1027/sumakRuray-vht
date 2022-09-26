@@ -238,8 +238,8 @@ public class ManagerAccesorio {
 	public void actualizarAccesorio(LoginDTO loginDTO, Accesorio edicionAccesorio) throws Exception {
 		String enlace = "";
 		Accesorio accesorio = (Accesorio) mDAO.findById(Accesorio.class, edicionAccesorio.getAcceId());
-		accesorio.setProveedor(edicionAccesorio.getProveedor());
-
+		
+		accesorio.setAccesorioAtributos(edicionAccesorio.getAccesorioAtributos());
 		if (!accesorio.getResponsable().getRespApellidos()
 				.equals(edicionAccesorio.getResponsable().getRespApellidos())) {
 			enlace += "Modificado Responsable a : " + edicionAccesorio.getResponsable().getRespApellidos();
@@ -307,7 +307,8 @@ public class ManagerAccesorio {
 	 * Actualizar un registro de Accesorio para Bodega o Mantenimiento
 	 */
 
-	public void actualizarEstadoAccesorio(LoginDTO loginDTO, Accesorio edicionAccesorio, String estado, String Observacion) throws Exception {
+	public void actualizarEstadoAccesorio(LoginDTO loginDTO, Accesorio edicionAccesorio, String estado,
+			String Observacion) throws Exception {
 		if (estado.equals("Inactivo")) {
 			mDAO.actualizar(edicionAccesorio);
 			// Auditoria del los eventos
@@ -352,9 +353,10 @@ public class ManagerAccesorio {
 	public List<AccesorioAtributo> findWhereByAcceAtriId(int acceId, int atriId) throws Exception {
 		return mDAO.findWhere(AccesorioAtributo.class, "acce_id=" + acceId + " and atri_id=" + atriId, null);
 	}
-	
-	// CAMBIOS REALIZADOS POR HACHE --------------------------------------------------------
-	
+
+	// CAMBIOS REALIZADOS POR HACHE
+	// --------------------------------------------------------
+
 	/**
 	 * Consulta de registros de un Accesorio y sus Atributos por su atributo y valor
 	 */
@@ -362,20 +364,18 @@ public class ManagerAccesorio {
 		return mDAO.findWhere(AccesorioAtributo.class, "atri_id=" + atriId + " and atri_descripcion='" + valor + "'",
 				null);
 	}
-	
+
 	public List<AccesorioAtributo> findAtributosValorAccesorio(String atriNombre) {
-		
+
 		String consulta1 = "select aa from AccesorioAtributo aa where aa.acceAtriId = (select max(aaa.acceAtriId) from AccesorioAtributo aaa "
 				+ "inner join Atributo a on aaa.atributo.atriId = a.atriId where a.atriNombre = '" + atriNombre + "')";
-		
+
 		Query q = mDAO.getEntityManager().createQuery(consulta1, AccesorioAtributo.class);
 		return (List<AccesorioAtributo>) q.getResultList();
 
 	}
-	
-	
-	
-	// ------------------------------------------------------ HACHE -----------------------------------
-	
-	
+
+	// ------------------------------------------------------ HACHE
+	// -----------------------------------
+
 }

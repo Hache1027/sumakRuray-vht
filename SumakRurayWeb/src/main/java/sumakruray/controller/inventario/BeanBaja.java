@@ -48,6 +48,8 @@ public class BeanBaja implements Serializable {
 	private BeanSegLogin beanSegLogin;
 	@Inject
 	private BeanBodega beanBodega;
+	@Inject
+	private BeanAccesorio beanAccesorio;
 	// Baja a Accesorio
 	private AccesorioBaja nuevoBajaAccesorio;
 	private List<AccesorioBaja> listaAccesorioBajas;
@@ -89,12 +91,10 @@ public class BeanBaja implements Serializable {
 
 	// Insertar un Registro de Accesorio a la bodega
 
-	public void actionSeleccisonAccesorioBaja(Accesorio accesorio) {
+	public void actionSeleccisonAccesorioBaja(Accesorio accesorio) throws Exception {
 		nuevoBajaAccesorio = new AccesorioBaja();
 		bodegaAccesorioSeleccionado = new BodegaAccesorio();
-		SeleccionBajaAccesorio = new Accesorio();
-		SeleccionBajaAccesorio = accesorio;
-		System.out.println(SeleccionBajaAccesorio.getAcceNombre() + "1");
+		SeleccionBajaAccesorio = beanAccesorio.ConsultarAccesorioAtributoEquipo(accesorio);
 		PrimeFaces current = PrimeFaces.current();
 		current.executeScript("PF('dialogoAccesorioBaja').show()");
 	}
@@ -115,14 +115,13 @@ public class BeanBaja implements Serializable {
 			nuevoBajaAccesorio.setBajaUsuarioCrea(persona.getPerNombres() + " " + persona.getPerApellidos());
 			nuevoBajaAccesorio.setAccesorio(SeleccionBajaAccesorio);
 			System.out.println("pppppppppppppppppp");
-			System.out.println("mmmmmmmmmmmmmmmmmmmmmm");
 
 			SeleccionBajaAccesorio.setAcceEstado("De Baja");
 			managerAccesorio.actualizarAccesorio(beanSegLogin.getLoginDTO(), SeleccionBajaAccesorio);
 			// beanBodega.actionListenerActualizarBodegaPorAccesorio(bodegaAccesorioSeleccionado,
 			// "De Baja");
 
-			managerBaja.insertarAccesorioBaja(beanSegLogin.getLoginDTO(),nuevoBajaAccesorio);
+			managerBaja.insertarAccesorioBaja(beanSegLogin.getLoginDTO(), nuevoBajaAccesorio);
 			listaAccesorioBajas = managerBaja.findAllAccesorioBajas();
 			nuevoBajaAccesorio = new AccesorioBaja();
 			System.out.println("ooooooooooooooo");
@@ -145,11 +144,9 @@ public class BeanBaja implements Serializable {
 	// Llenado de los datos del nuevo registro de BodegaEquipo
 	public void actionSeleccisonEquipoBaja(Equipo Equipo) throws Exception {
 		nuevoBajaEquipo = new EquipoBaja();
-		SeleccionBajaEquipo = new Equipo();
 		SeleccionBajaEquipo = Equipo;
 		listaAccesoriosEquipo = managerEquipo.findByEquiIdSeleccionado(Equipo.getEquiId());
 		Equipo.setEquipoAccesorios(listaAccesoriosEquipo);
-		System.out.println(SeleccionBajaEquipo.getEquiNombre() + "1");
 		PrimeFaces current = PrimeFaces.current();
 		current.executeScript("PF('dialogoEquipoBaja').show()");
 	}
@@ -180,16 +177,11 @@ public class BeanBaja implements Serializable {
 				}
 			}
 			SeleccionBajaEquipo.setEquiEstado("De Baja");
-			managerEquipo.cambiarEstadoEquipo(beanSegLogin.getLoginDTO(),SeleccionBajaEquipo, "De Baja","");
-			//beanBodega.actionListenerActualizarBodegaPorEquipo(bodegaEquipoSeleccionado, "De Baja");
-
-			System.out.println("pppppppppppppppppp");
-			System.out.println("mmmmmmmmmmmmmmmmmmmmmm");
+			managerEquipo.cambiarEstadoEquipo(beanSegLogin.getLoginDTO(), SeleccionBajaEquipo, "De Baja", "");
 			managerBaja.insertarEquipoBaja(nuevoBajaEquipo);
 			listaEquipoBajas = managerBaja.findAllEquipoBajas();
 			nuevoBajaEquipo = new EquipoBaja();
 			beanBodega.actionSelectionEquiposInactivos();
-			System.out.println("ooooooooooooooo");
 			JSFUtil.crearMensajeINFO("Equipos con sus Accesorios dado de Baja");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeERROR(e.getMessage());
